@@ -1,12 +1,18 @@
+
+// Library includes
 #include <Arduino.h>
 #include <EEPROM.h>
+
+// User defined includes
+#include <parameters.h>
 
 //--------------------------------------------------------------------- Motor Pin Parameters
 int direction_pin_x = 2;
 int direction_pin_y = 4;
 int pulse_pin_x = 3;
 int pulse_pin_y = 5;
-//--------------------------------------------------------------------- Motor Control Parameters
+
+/* //--------------------------------------------------------------------- Motor Control Parameters
 int threat_distance_x = 10000; // In units of micrometer
 int threat_distance_y = 10000; // In units of micrometer
 float pulley_diameter_x = 38.2; //In units of millimeter
@@ -39,7 +45,7 @@ int step_count_acceleration_calculated_y; //Memory for step_count_acceleration_y
 float system_cycle_linear_distance_x; // The varible keeps linear distance of one cycle for x-axis
 float system_cycle_linear_distance_y; // The varible keeps linear distance of one cycle for y-axis
 float pi = 3.141592;
-//--------------------------------------------------------------------- Serial Communication Parameters
+ *///--------------------------------------------------------------------- Serial Communication Parameters
 String serial_package;
 //---------------------------------------------------------------------
 
@@ -172,8 +178,10 @@ void goto_point(String package_income){
 }
 
 void set_parameters(String package_income){
-  int package_id_set = ((package_income[1]-'0')*10)+(package_income[2]-'0');
+
+  int package_id_set = ((package_income[1]-'0') * 10)+(package_income[2] - '0');
   int parameter_value_set = ((package_income[3]-'0')*100000)+((package_income[4]-'0')*10000)+((package_income[5]-'0')*1000)+((package_income[6]-'0')*100)+((package_income[7]-'0')*10)+((package_income[8]-'0'));     
+  
   switch (package_id_set){
     case 1:
       threat_distance_x = parameter_value_set;
@@ -320,14 +328,14 @@ void setup() {
   pinMode(pulse_pin_y, OUTPUT);
 //----------------------------------------
   if(driving_mechanism = 0){
-    speed_acceleration_calculator_pulley();
     system_cycle_linear_distance_x = pi*pulley_diameter_x;
     system_cycle_linear_distance_y = pi*pulley_diameter_y;
+    speed_acceleration_calculator_pulley();
   }
   else{
-    speed_acceleration_calculator_leadscrew();
     system_cycle_linear_distance_x = threat_distance_x;
     system_cycle_linear_distance_y = threat_distance_y;
+    speed_acceleration_calculator_leadscrew();
   }
 }
 
