@@ -15,26 +15,17 @@ int pulse_pin_y = 5;
 String serial_package;
 //---------------------------------------------------------------------
 float parse_distance(String package_income,char axis){
-  float delta = 0;
+  String delta_string;
+  float delta_float = 0;
   if(axis == 'x'){
-    delta = (package_income[3]-'0')*1000000;
-    delta = delta + (package_income[4]-'0')*100000;
-    delta = delta + (package_income[5]-'0')*10000;
-    delta = delta + (package_income[6]-'0')*1000;
-    delta = delta + (package_income[7]-'0')*100;
-    delta = delta + (package_income[8]-'0')*10;
-    delta = delta + (package_income[9]-'0');
-    return delta / 1000; // Unit convertion of micrometers to millimeters 
+    delta_string = package_income.substring(3,10);
+    delta_float = delta_string.toFloat();
+    return delta_float / 1000; // Unit convertion of micrometers to millimeters 
   }
   else if(axis == 'y'){
-    delta = (package_income[3]-'0')*1000000;
-    delta = delta + (package_income[11]-'0')*100000;
-    delta = delta + (package_income[12]-'0')*10000;
-    delta = delta + (package_income[13]-'0')*1000;
-    delta = delta + (package_income[14]-'0')*100;
-    delta = delta + (package_income[15]-'0')*10;
-    delta = delta + (package_income[16]-'0');
-    return delta / 1000; // Unit convertion of micrometers to millimeters
+    delta_string = package_income.substring(11,18);
+    delta_float = delta_string.toFloat();
+    return delta_float / 1000; // Unit convertion of micrometers to millimeters
   }
   else{
     return 0;
@@ -135,130 +126,132 @@ void move_motor(String package_income){
     }
   }
 //---------------------------------------------------------------------- Send Feedback (Action Accomplished)
-  Serial.print("FA0001");
+  Serial.println("FA0001");
 }
 
-void goto_point(String package_income){
+void goto_point(String package_income){ //TODO: Add destination point feature here 
 
 }
 
-void set_parameters(String package_income){
+void set_parameters(String package_income){ //TODO: Fix the bug for error EP0006 when single digit set ID comes from package 
 
-  int package_id_set = ((package_income[1]-'0') * 10)+(package_income[2] - '0');
-  int parameter_value_set = ((package_income[3]-'0')*100000)+((package_income[4]-'0')*10000)+((package_income[5]-'0')*1000)+((package_income[6]-'0')*100)+((package_income[7]-'0')*10)+((package_income[8]-'0'));     
-  
-  switch (package_id_set){
+  String package_id_set_string = package_income.substring(1,2);
+  int package_id_set_int = package_id_set_string.toInt();
+  String parameter_value_set_string = package_income.substring(3,8);     
+  uint32_t parameter_value_set_int = parameter_value_set_string.toInt();
+
+  switch (package_id_set_int){
     case 1:
-      threat_distance_x = parameter_value_set;
+      threat_distance_x = parameter_value_set_int;
       Serial.println("FS0001");
       break;
     case 2:
-      threat_distance_y = parameter_value_set;
+      threat_distance_y = parameter_value_set_int;
       Serial.println("FS0002");
       break;
     case 3:
-      pulley_diameter_x = parameter_value_set;
+      pulley_diameter_x = parameter_value_set_int;
       Serial.println("FS0003");
       break;
     case 4:
-      pulley_diameter_y = parameter_value_set;
+      pulley_diameter_y = parameter_value_set_int;
       Serial.println("FS0004");
       break;    
     case 5:
-      motor_fullcycle_step_x = parameter_value_set;
+      motor_fullcycle_step_x = parameter_value_set_int;
       Serial.println("FS0005");
       break;    
     case 6:
-      motor_fullcycle_step_y = parameter_value_set;
+      motor_fullcycle_step_y = parameter_value_set_int;
       Serial.println("FS0006");
       break;
     case 7:
-      microstep_coeff_x = parameter_value_set;
+      microstep_coeff_x = parameter_value_set_int;
       Serial.println("FS0007");
       break;
     case 8:
-      microstep_coeff_y = parameter_value_set;
+      microstep_coeff_y = parameter_value_set_int;
       Serial.println("FS0008");
       break;
     case 9:
-      max_speed_x = parameter_value_set;
+      max_speed_x = parameter_value_set_int;
       Serial.println("FS0009");
       break;
     case 10:
-      max_speed_y = parameter_value_set;
+      max_speed_y = parameter_value_set_int;
       Serial.println("FS0010");
       break;
     case 11:
-      step_delay_speed_steady_x = parameter_value_set;
+      step_delay_speed_steady_x = parameter_value_set_int;
       Serial.println("FS0011");
       break;
     case 12:
-      step_delay_speed_steady_y = parameter_value_set;
+      step_delay_speed_steady_y = parameter_value_set_int;
       Serial.println("FS0012");
       break;
     case 13:
-      step_delay_speed_min_x = parameter_value_set;
+      step_delay_speed_min_x = parameter_value_set_int;
       Serial.println("FS0013");
       break;
     case 14:
-      step_delay_speed_min_y = parameter_value_set;
+      step_delay_speed_min_y = parameter_value_set_int;
       Serial.println("FS0014");
       break;
     case 15:
-      step_delay_instantaneous_x = parameter_value_set;
+      step_delay_instantaneous_x = parameter_value_set_int;
       Serial.println("FS0015");
       break;
     case 16:
-      step_delay_instantaneous_y = parameter_value_set;
+      step_delay_instantaneous_y = parameter_value_set_int;
       Serial.println("FS0016");
       break;
     case 17:
-      step_delay_acceleration_avg_x = parameter_value_set;
+      step_delay_acceleration_avg_x = parameter_value_set_int;
       Serial.println("FS0017");
       break;
     case 18:
-      step_delay_acceleration_avg_y = parameter_value_set;
+      step_delay_acceleration_avg_y = parameter_value_set_int;
       Serial.println("FS0018");
       break;
     case 19:
-      step_count_acceleration_x = parameter_value_set;
+      step_count_acceleration_x = parameter_value_set_int;
       Serial.println("FS0019");
       break;
     case 20:
-      step_count_acceleration_y = parameter_value_set;
+      step_count_acceleration_y = parameter_value_set_int;
       Serial.println("FS0020");
       break;
     case 21:
-      input_speed_steady_x = parameter_value_set;
+      input_speed_steady_x = parameter_value_set_int;
       Serial.println("FS0021");
       break;
     case 22:
-      input_speed_steady_y = parameter_value_set;
+      input_speed_steady_y = parameter_value_set_int;
       Serial.println("FS0022");
       break;
     case 23:
-      input_acceleration_x = parameter_value_set;
+      input_acceleration_x = parameter_value_set_int;
       Serial.println("FS0023");
       break;
     case 24:
-      input_acceleration_y = parameter_value_set;
+      input_acceleration_y = parameter_value_set_int;
       Serial.println("FS0024");
       break;
     case 25:
-      delta_t_x = parameter_value_set;
+      delta_t_x = parameter_value_set_int;
       Serial.println("FS0025");
       break;
     case 26:
-      delta_t_y = parameter_value_set;
+      delta_t_y = parameter_value_set_int;
       Serial.println("FS0026");
       break;
     case 27:
-      driving_mechanism = parameter_value_set;
+      driving_mechanism = parameter_value_set_int;
       speed_acceleration_calculator_pulley();
       Serial.println("FS0027");
       break;
     case 28:
-      driving_mechanism = parameter_value_set;
+      driving_mechanism = parameter_value_set_int;
       speed_acceleration_calculator_leadscrew();
       Serial.println("FS0028");
       break;
