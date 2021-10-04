@@ -135,10 +135,16 @@ void goto_point(String package_income){ //TODO: Add destination point feature he
 
 void set_parameters(String package_income){ //TODO: Fix the bug for error EP0006 when single digit set ID comes from package 
 
-  String package_id_set_string = package_income.substring(1,2);
+  String package_id_set_string = package_income.substring(1,3);
   int package_id_set_int = package_id_set_string.toInt();
-  String parameter_value_set_string = package_income.substring(3,8);     
+  String parameter_value_set_string = package_income.substring(3,9);     
   uint32_t parameter_value_set_int = parameter_value_set_string.toInt();
+
+  //---------------------------------- Monitor Script Starts Here
+  Serial.print("Package ID Set String: ");
+  Serial.println(package_id_set_string);
+  Serial.print("Package ID Set Int: ");
+  Serial.println(package_id_set_int);
 
   switch (package_id_set_int){
     case 1:
@@ -261,7 +267,7 @@ void set_parameters(String package_income){ //TODO: Fix the bug for error EP0006
   }
 }
 
-void command_analyser(String package_income){
+void command_analyser(String package_income){ // TODO: Add package checksum
   if(package_income[0] == 'M'){
     move_motor(package_income);
   }
