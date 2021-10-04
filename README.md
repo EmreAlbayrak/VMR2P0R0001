@@ -19,8 +19,8 @@ Following nine digits are null bits to match the package size expected from robo
 
 *List of set parameters and IDs:*
 
-		01 -> threat_distance_x
-		02 -> threat_distance_y
+		01 -> thread_distance_x
+		02 -> thread_distance_y
 		03 -> pulley_diameter_x
 		04 -> pulley_diameter_y
 		05 -> motor_fullcycle_step_x
@@ -81,6 +81,7 @@ The first element of the array (array[1]) is the return type (P for package, F f
 		EP0003 -> Invalid motion type (array[1] error)
 		EP0004 -> Invalid direction of rotation for x-axis (array[2])
 		EP0005 -> Invalid direction of rotation for y-axis (array[10])
+		EP0006 -> Invalid set parameter ID (array[1], array[2])
 
 *List of Funtion Errors:*
 	  EF0001 -> "Parse Function" error in code
