@@ -82,6 +82,7 @@ The first element of the array (array[1]) is the return type (P for package, F f
 		EP0004 -> Invalid direction of rotation for x-axis (array[2])
 		EP0005 -> Invalid direction of rotation for y-axis (array[10])
 		EP0006 -> Invalid set parameter ID (array[1], array[2])
+		EP0008 -> Invalid package/command size
 
 *List of Funtion Errors:*
 	  EF0001 -> "Parse Function" error in code
