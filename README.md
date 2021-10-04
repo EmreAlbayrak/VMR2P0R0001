@@ -4,9 +4,11 @@
 
 # Protocol Information
 
+	The system communicates over UART communication protocol, 9600 baud rate, 8-bit, no handshake.
+
 ### 1. Set Commands:
 
-- #### List of the IDs of "SET" parameter and package structure:
+- #### List of the IDs of "set" parameter and package structure:
 #### Example Package: SPPXXXXXXNNNNNNNNN   
 
 Where first and second element of the array ("S" is the zeroth element) is the parameter ID represented by "P P".
@@ -46,16 +48,33 @@ Following nine digits are null bits to match the package size expected from robo
 		27 -> driving_mechanism_x
 		27 -> driving_mechanism_y
 
+### 2. Move Commands structure
+- #### Command ID and structure:
+  #### Example Package: MLPXXXXXXXPXXXXXXX
 
-### 3. Feedback Commands
-- #### List of error ID and structure:
+	Fix package size: 18 element string
+
+	Where the zeroth element of the array (array[0]) is command type ("M" for move).
+
+	The first element of the array (array[1]) is the motion type ("R" for rotational, "L" for linear).
+
+	The second element of the array (array[2]) is the direction of motion on x-axis ("P" for positive, "N" for negative).
+
+	Element number three to nine are delta distance on x-axis in units of micrometers.
+
+	The tenth element of the array (array[10]) is the direction of montion on y-axis.
+
+	Element number eleven to seventeen are delta distance on y-axis in units of micrometer.
+
+### 3. Feedback Packages
+- #### Error ID and structure:
 	#### Example Package: EPXXXX
 
 Where the zeroth element of the array (array[0]) is command type ("E" for errors).
 
 The first element of the array (array[1]) is the return type (P for package, F for functions).
 
-*List of Package Errors:*
+*Package Errors:*
 
 		EP0001 -> Package size mismatch
 		EP0002 -> Invalid command type (array[0] error)
@@ -63,11 +82,11 @@ The first element of the array (array[1]) is the return type (P for package, F f
 		EP0004 -> Invalid direction of rotation for x-axis (array[2])
 		EP0005 -> Invalid direction of rotation for y-axis (array[10])
 
-	*List of Funtion Errors:*
+*List of Funtion Errors:*
 	  EF0001 -> "Parse Function" error in code
 
-- #### List of feedback ID and structure:
-#### Example Package: FSXXXX
+- #### Feedback ID and structure:
+  #### Example Package: FSXXXX
 
 Where the zeroth element of the array (array[0]) is  the return type ("F" for feedback).
 
@@ -106,4 +125,6 @@ Next four element of the array is the feedback ID.
 		 FS0027 -> driving_mechanism_x set done.
 		 FS0028 -> driving_mechanism_y set done.
 
--	#### List of Move commands and package structure
+		 FP0001 -> Move Package Confirmed
+
+		 FA0001 -> Action Accomplished

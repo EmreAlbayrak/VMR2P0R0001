@@ -11,44 +11,9 @@ int direction_pin_x = 2;
 int direction_pin_y = 4;
 int pulse_pin_x = 3;
 int pulse_pin_y = 5;
-
-/* //--------------------------------------------------------------------- Motor Control Parameters
-int threat_distance_x = 10000; // In units of micrometer
-int threat_distance_y = 10000; // In units of micrometer
-float pulley_diameter_x = 38.2; //In units of millimeter
-float pulley_diameter_y = 38.2; //In units of millimeter
-int motor_fullcycle_step_x = 400; // Motor's full cycle number of steps
-int motor_fullcycle_step_y = 400; // Motor's full cycle number of steps
-float microstep_coeff_x = 1; // Motor driver's microstep setting
-float microstep_coeff_y = 1; // Motor driver's microstep setting
-int max_speed_x = 3; // In units of cm/s
-int max_speed_y = 3; // In Units of cm/s
-int step_delay_speed_steady_x = 1000; // In units of microsecond
-int step_delay_speed_steady_y = 1000; // In units of microsecond
-int step_delay_speed_min_x = 5000; // In units of microsecond
-int step_delay_speed_min_y = 5000; // In units of microsecond
-int step_delay_instantaneous_x = 4000; // In units of microsecond
-int step_delay_instantaneous_y = 4000; // In units of microsecond
-int step_delay_acceleration_avg_x = 500; // In units of microsecond
-int step_delay_acceleration_avg_y = 500; // In units of microsecond
-int step_count_acceleration_x = 50; // Number of steps that acceleration going to applied on x-axis
-int step_count_acceleration_y = 50; // Number of steps that acceleration going to applied on y-axis
-int input_speed_steady_x = 10; // In units of mm/s
-int input_speed_steady_y = 10; // In units of mm/s
-int input_acceleration_x = 10; // In units of mm/(s^2)
-int input_acceleration_y = 10; // In units of mm/(s^2)
-int driving_mechanism = 0; // "0" -> Pulley System, "1" -> Lead Screw 
-float delta_t_x; // Time that acceleration is going to apply on x-axis
-float delta_t_y; // Time that acceleration is going to apply on y-axis
-int step_count_acceleration_calculated_x; //Memory for step_count_acceleration_x calculation 
-int step_count_acceleration_calculated_y; //Memory for step_count_acceleration_y calculation
-float system_cycle_linear_distance_x; // The varible keeps linear distance of one cycle for x-axis
-float system_cycle_linear_distance_y; // The varible keeps linear distance of one cycle for y-axis
-float pi = 3.141592;
- *///--------------------------------------------------------------------- Serial Communication Parameters
+//--------------------------------------------------------------------- Serial Communication Parameters
 String serial_package;
 //---------------------------------------------------------------------
-
 float parse_distance(String package_income,char axis){
   float delta = 0;
   if(axis == 'x'){

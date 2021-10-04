@@ -3,9 +3,6 @@
 
 #include <Arduino.h>
 
-// TODO: Kod calisirken degisenler (Runtime variables) ile kod calismadan once ayarlanan degiskenler (Compile-time variables) ayir
-// TOOD: Runtime da hesaplanamasi gerekmeyen degiskenleri constexpr olarak ayarlayabilirsin. 
-
 //--------------------------------------------------------------------- Motor Control Parameters
 uint32_t threat_distance_x = 10000; // In units of micrometer
 uint32_t threat_distance_y = 10000; // In units of micrometer
