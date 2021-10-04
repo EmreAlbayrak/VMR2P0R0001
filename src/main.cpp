@@ -12,7 +12,7 @@ int direction_pin_y = 4;
 int pulse_pin_x = 3;
 int pulse_pin_y = 5;
 //--------------------------------------------------------------------- Serial Communication Parameters
-String serial_package;
+String serial_package; 
 //---------------------------------------------------------------------
 float parse_distance(String package_income,char axis){
   String delta_string;
