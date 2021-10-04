@@ -1,7 +1,7 @@
 
 // Library includes
 #include <Arduino.h>
-#include <EEPROM.h>
+#include <EEPROM.h> //TODO: Add eeprom feature to store the parameters
 
 // User defined includes
 #include <parameters.h>
