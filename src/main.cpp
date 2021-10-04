@@ -278,7 +278,7 @@ void command_analyser(String package_income){ // TODO: Add package checksum
     }
   }
   else{
-    
+    Serial.println("EP0007");
   }
 }
 
