@@ -263,6 +263,11 @@ void set_parameters(String package_income){
 
 void command_analyser(String package_income){ // TODO: Add package checksum
   int package_income_length = package_income.length();
+
+  //------------------------------- Test monitor here
+  Serial.print("Package Length: ");
+  Serial.println(package_income_length);
+
   if(package_income_length = 18){
     if(package_income[0] == 'M'){
       move_motor(package_income);
