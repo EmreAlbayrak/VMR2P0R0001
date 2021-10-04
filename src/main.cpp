@@ -262,19 +262,24 @@ void set_parameters(String package_income){
 }
 
 void command_analyser(String package_income){ // TODO: Add package checksum
-  if(package_income[0] == 'M'){
-    move_motor(package_income);
-  }
-  else if(package_income[0] == 'S'){
-    set_parameters(package_income);
-  }
-  else if(package_income[0] == 'G'){
-    goto_point(package_income);
+  int package_income_length = package_income.length();
+  if(package_income_length = 18){
+    if(package_income[0] == 'M'){
+      move_motor(package_income);
+    }
+    else if(package_income[0] == 'S'){
+      set_parameters(package_income);
+    }
+    else if(package_income[0] == 'G'){
+      goto_point(package_income);
+    }
+    else{
+      Serial.println("EP0002");
+    }
   }
   else{
-    Serial.println("EP0002");
+    
   }
-
 }
 
 void setup() {
