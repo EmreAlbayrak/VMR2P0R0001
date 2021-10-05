@@ -16,7 +16,7 @@ String serial_package;
 //---------------------------------------------------------------------
 float_t parse_distance(String package_income,char axis){
   String delta_string;
-  float delta_float = 0;
+  float_t delta_float = 0;
   if(axis == 'x'){
     delta_string = package_income.substring(3,10);
     delta_float = delta_string.toFloat();
@@ -28,6 +28,7 @@ float_t parse_distance(String package_income,char axis){
     return delta_float / 1000; // Unit convertion of micrometers to millimeters
   }
   else{
+    Serial.println(">EF0003");
     return 0;
   }
 }
@@ -54,7 +55,7 @@ void speed_acceleration_calculator_pulley(){
   step_count_acceleration_calculated_y = delta_t_y*(10^6) / step_delay_acceleration_avg_y * 2; //Number of steps that acceleration going to be applied on y-axis (2 delay for one step)
 }
 
-uint32_t degree_to_step_converter(float degree, uint32_t motor_full_cycle_step,uint32_t micrestep_coeff){
+uint32_t degree_to_step_converter(float_t degree, uint32_t motor_full_cycle_step,uint32_t micrestep_coeff){
   return (degree * motor_full_cycle_step * micrestep_coeff / 360);
 }
 
@@ -71,7 +72,7 @@ void move_motor_linear_motion(String package_income){
     digitalWrite(direction_pin_x, LOW);
   }
   else {
-    Serial.println("EP0003");
+    Serial.println(">EP0003");
   }
   if(package_income[10] == 'P'){
     digitalWrite(direction_pin_y, HIGH);
@@ -80,7 +81,7 @@ void move_motor_linear_motion(String package_income){
     digitalWrite(direction_pin_y, LOW);
   }
   else {
-    Serial.println("EP0003");
+    Serial.println(">EP0003");
   }
 //--------------------------------------------------------------------- Parse distance from package
   float_t distance_x = parse_distance(package_income,'x');
@@ -172,118 +173,118 @@ void set_parameters(String package_income){
   switch (package_id_set_int){
     case 1:
       thread_distance_x = parameter_value_set_int;
-      Serial.println("FS0001");
+      Serial.println(">FS0001");
       break;
     case 2:
       thread_distance_y = parameter_value_set_int;
-      Serial.println("FS0002");
+      Serial.println(">FS0002");
       break;
     case 3:
       pulley_diameter_x = parameter_value_set_int / 4;
-      Serial.println("FS0003");
+      Serial.println(">FS0003");
       break;
     case 4:
       pulley_diameter_y = parameter_value_set_int / 4;
-      Serial.println("FS0004");
+      Serial.println(">FS0004");
       break;    
     case 5:
       motor_fullcycle_step_x = parameter_value_set_int;
-      Serial.println("FS0005");
+      Serial.println(">FS0005");
       break;    
     case 6:
       motor_fullcycle_step_y = parameter_value_set_int;
-      Serial.println("FS0006");
+      Serial.println(">FS0006");
       break;
     case 7:
       microstep_coeff_x = parameter_value_set_int;
-      Serial.println("FS0007");
+      Serial.println(">FS0007");
       break;
     case 8:
       microstep_coeff_y = parameter_value_set_int;
-      Serial.println("FS0008");
+      Serial.println(">FS0008");
       break;
     case 9:
       max_speed_x = parameter_value_set_int;
-      Serial.println("FS0009");
+      Serial.println(">FS0009");
       break;
     case 10:
       max_speed_y = parameter_value_set_int;
-      Serial.println("FS0010");
+      Serial.println(">FS0010");
       break;
     case 11:
       step_delay_speed_steady_x = parameter_value_set_int;
-      Serial.println("FS0011");
+      Serial.println(">FS0011");
       break;
     case 12:
       step_delay_speed_steady_y = parameter_value_set_int;
-      Serial.println("FS0012");
+      Serial.println(">FS0012");
       break;
     case 13:
       step_delay_speed_min_x = parameter_value_set_int;
-      Serial.println("FS0013");
+      Serial.println(">FS0013");
       break;
     case 14:
       step_delay_speed_min_y = parameter_value_set_int;
-      Serial.println("FS0014");
+      Serial.println(">FS0014");
       break;
     case 15:
       step_delay_instantaneous_x = parameter_value_set_int;
-      Serial.println("FS0015");
+      Serial.println(">FS0015");
       break;
     case 16:
       step_delay_instantaneous_y = parameter_value_set_int;
-      Serial.println("FS0016");
+      Serial.println(">FS0016");
       break;
     case 17:
       step_delay_acceleration_avg_x = parameter_value_set_int;
-      Serial.println("FS0017");
+      Serial.println(">FS0017");
       break;
     case 18:
       step_delay_acceleration_avg_y = parameter_value_set_int;
-      Serial.println("FS0018");
+      Serial.println(">FS0018");
       break;
     case 19:
       step_count_acceleration_x = parameter_value_set_int;
-      Serial.println("FS0019");
+      Serial.println(">FS0019");
       break;
     case 20:
       step_count_acceleration_y = parameter_value_set_int;
-      Serial.println("FS0020");
+      Serial.println(">FS0020");
       break;
     case 21:
       input_speed_steady_x = parameter_value_set_int;
-      Serial.println("FS0021");
+      Serial.println(">FS0021");
       break;
     case 22:
       input_speed_steady_y = parameter_value_set_int;
-      Serial.println("FS0022");
+      Serial.println(">FS0022");
       break;
     case 23:
       input_acceleration_x = parameter_value_set_int;
-      Serial.println("FS0023");
+      Serial.println(">FS0023");
       break;
     case 24:
       input_acceleration_y = parameter_value_set_int;
-      Serial.println("FS0024");
+      Serial.println(">FS0024");
       break;
     case 25:
       delta_t_x = parameter_value_set_int;
-      Serial.println("FS0025");
+      Serial.println(">FS0025");
       break;
     case 26:
       delta_t_y = parameter_value_set_int;
-      Serial.println("FS0026");
+      Serial.println(">FS0026");
       break;
     case 27:
       driving_mechanism = parameter_value_set_int;
-      Serial.println("FS0027");
+      Serial.println(">FS0027");
       break;
     case 28:
       driving_mechanism = parameter_value_set_int;
-      Serial.println("FS0028");
+      Serial.println(">FS0028");
       break;
     default:
-      Serial.println("EP0006");
+      Serial.println(">EP0006");
       break;
   }
   if(driving_mechanism = 0){
@@ -293,12 +294,12 @@ void set_parameters(String package_income){
     speed_acceleration_calculator_leadscrew();
   }
   else{
-    Serial.println("EF0002");
+    Serial.println(">EF0002");
   }
 }
 
-void command_analyser(String package_income){ // TODO: Add motion type selector (array[1])
-  int package_income_length = package_income.length();
+void command_analyser(String package_income){ // TODO: Add motion type selector linear or rotational (array[1])
+  uint32_t package_income_length = package_income.length();
 /*  //------------------------------- Test monitor here
   Serial.print("Package Length: ");
   Serial.println(package_income_length);
@@ -314,15 +315,15 @@ void command_analyser(String package_income){ // TODO: Add motion type selector 
       goto_point(package_income);
     }
     else{
-      Serial.println("EP0002");
+      Serial.println(">EP0002");
     }
   }
   else{
-    Serial.println("EP0001");
+    Serial.println(">EP0001");
   }
 }
 
-void setup() {
+void setup() { //TODO: Check "diriving_mechanism: 1" bug
   Serial.begin(9600);
 //---------------------------------------- Motor Pin Definitions
   pinMode(direction_pin_x, OUTPUT);
@@ -343,7 +344,7 @@ void setup() {
     Serial.println("Checkpoint 2");
   }
   else{
-    Serial.print("EF0002");
+    Serial.print(">EF0002");
   }
 }
 
