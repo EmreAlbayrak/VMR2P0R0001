@@ -4,7 +4,9 @@
 
 # Protocol Information
 
-	The system communicates over UART communication protocol, 9600 baud rate, 8-bit, no handshake.
+	The system communicates over UART protocol, 9600 baud rate, 8-bit, no handshake.
+
+	The current verion tested on STM32F303RE Nucleo Board With built-in ST-Link V2 UART Converter.
 
 ### 1. Set Commands:
 
@@ -45,8 +47,7 @@ Following nine digits are null bits to match the package size expected from robo
 		24 -> input_acceleration_y
 		25 -> delta_t_x
 		26 -> delta_t_y
-		27 -> driving_mechanism_x
-		27 -> driving_mechanism_y
+		27 -> driving_mechanism
 
 ### 2. Move Commands structure
 - #### Command ID and structure:
@@ -82,7 +83,6 @@ The first element of the array (array[1]) is the return type (P for package, F f
 		EP0004 -> Invalid direction of rotation for x-axis (array[2])
 		EP0005 -> Invalid direction of rotation for y-axis (array[10])
 		EP0006 -> Invalid set parameter ID (array[1], array[2])
-		EP0008 -> Invalid package/command size
 
 *List of Funtion Errors:*
 		EF0001 -> "Parse Function" error in code

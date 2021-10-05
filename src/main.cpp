@@ -91,7 +91,9 @@ void move_motor_linear_motion(String package_income){
   uint32_t step_x = degree_to_step_converter(degree_x, motor_fullcycle_step_x, microstep_coeff_x);
   uint32_t step_y = degree_to_step_converter(degree_y, motor_fullcycle_step_y, microstep_coeff_y);
   
-  //--------------------------- Test System Monitor
+  //----------------------------------------------- Test System Monitor
+  Serial.print("Driving Mechanism: ");
+  Serial.println(driving_mechanism);
   Serial.print("System cycle linear distance x: ");
   Serial.println(system_cycle_linear_distance_x);
   Serial.print("System cycle linear distance y: ");
@@ -108,7 +110,7 @@ void move_motor_linear_motion(String package_income){
   Serial.println(step_x);
   Serial.print("Step y: ");
   Serial.println(step_y);
-
+  //-----------------------------------------------
 //--------------------------------------------------------------------- Easter Egg
   if(step_x / 2 > step_count_acceleration_calculated_x){
     step_count_acceleration_x = step_count_acceleration_calculated_x;
@@ -138,7 +140,7 @@ void move_motor_linear_motion(String package_income){
       step_delay_instantaneous_x = map(step_counter_x, step_x - step_count_acceleration_calculated_x, step_x, step_delay_speed_steady_x, step_delay_speed_min_x);
     }
   }
-//---------------------------------------------------------------------- Driving y-axis motor
+//--------------------------------------------------------------------- Driving y-axis motor
   for(int step_counter_y = 0; step_counter_y < step_count_acceleration_y; step_counter_y++){
     digitalWrite(pulse_pin_y, HIGH);
     delayMicroseconds(step_delay_instantaneous_y);
@@ -153,7 +155,7 @@ void move_motor_linear_motion(String package_income){
     }
   }
 //---------------------------------------------------------------------- Send Feedback (Action Accomplished)
-  Serial.println("FA0001");
+  Serial.println("FA0001"); 
 }
 
 void goto_point(String package_income){ //TODO: Add destination point feature here 
@@ -287,8 +289,11 @@ void set_parameters(String package_income){
   if(driving_mechanism = 0){
     speed_acceleration_calculator_pulley();
   }
-  else{
+  else if(driving_mechanism = 1){
     speed_acceleration_calculator_leadscrew();
+  }
+  else{
+    Serial.println("EF0002");
   }
 }
 
@@ -313,7 +318,7 @@ void command_analyser(String package_income){ // TODO: Add motion type selector 
     }
   }
   else{
-    Serial.println("EP0007");
+    Serial.println("EP0001");
   }
 }
 
@@ -329,11 +334,16 @@ void setup() {
     system_cycle_linear_distance_x = pi*pulley_diameter_x;
     system_cycle_linear_distance_y = pi*pulley_diameter_y;
     speed_acceleration_calculator_pulley();
+    Serial.println("Checkpoint 1");
   }
-  else{
+  else if(driving_mechanism = 1){
     system_cycle_linear_distance_x = thread_distance_x;
     system_cycle_linear_distance_y = thread_distance_y;
     speed_acceleration_calculator_leadscrew();
+    Serial.println("Checkpoint 2");
+  }
+  else{
+    Serial.print("EF0002");
   }
 }
 
