@@ -1,6 +1,8 @@
 # **Visiomex VMR2P0R0001 Documentation**
 
-*Visiomex Industrial Image Processing Solutions Inc. 2021*  
+*Visiomex Industrial Image Processing Solutions Inc. 2021*
+
+*This project is in development process. Some parts of the code migth not work as expected.*   
 
 # Protocol Information
 
