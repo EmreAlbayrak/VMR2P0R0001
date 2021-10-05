@@ -169,11 +169,11 @@ void set_parameters(String package_income){
       Serial.println("FS0002");
       break;
     case 3:
-      pulley_diameter_x = parameter_value_set_int;
+      pulley_diameter_x = parameter_value_set_int / 4;
       Serial.println("FS0003");
       break;
     case 4:
-      pulley_diameter_y = parameter_value_set_int;
+      pulley_diameter_y = parameter_value_set_int / 4;
       Serial.println("FS0004");
       break;    
     case 5:
@@ -266,17 +266,21 @@ void set_parameters(String package_income){
       break;
     case 27:
       driving_mechanism = parameter_value_set_int;
-      speed_acceleration_calculator_pulley();
       Serial.println("FS0027");
       break;
     case 28:
       driving_mechanism = parameter_value_set_int;
-      speed_acceleration_calculator_leadscrew();
       Serial.println("FS0028");
       break;
     default:
       Serial.println("EP0006");
       break;
+  }
+  if(driving_mechanism = 0){
+    speed_acceleration_calculator_pulley();
+  }
+  else{
+    speed_acceleration_calculator_leadscrew();
   }
 }
 
