@@ -323,7 +323,7 @@ void command_analyser(String package_income){ // TODO: Add motion type selector 
   }
 }
 
-void setup() { //TODO: Check "diriving_mechanism: 1" bug
+void setup() { //TODO: Check "diriving_mechanism: 1" bug. Change the type from "int" to "char" and try again. 
   Serial.begin(9600);
 //---------------------------------------- Motor Pin Definitions
   pinMode(direction_pin_x, OUTPUT);
