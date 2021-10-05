@@ -58,7 +58,7 @@ uint32_t degree_to_step_converter(float degree, uint32_t motor_full_cycle_step,u
   return (degree * motor_full_cycle_step * micrestep_coeff / 360);
 }
 
-float_t linear_to_rotational_converter(float distance, uint32_t system_cycle_linear_distance){
+float_t linear_to_rotational_converter(float_t distance, uint32_t system_cycle_linear_distance){
   return ((distance / system_cycle_linear_distance) * 360);
 }
 
@@ -83,8 +83,8 @@ void move_motor_linear_motion(String package_income){
     Serial.println("EP0003");
   }
 //--------------------------------------------------------------------- Parse distance from package
-  float distance_x = parse_distance(package_income,'x');
-  float distance_y = parse_distance(package_income,'y');
+  float_t distance_x = parse_distance(package_income,'x');
+  float_t distance_y = parse_distance(package_income,'y');
 //--------------------------------------------------------------------- Distance to Degree & Degree to Step Conversions
   float degree_x = linear_to_rotational_converter(distance_x, system_cycle_linear_distance_x);
   float degree_y = linear_to_rotational_converter(distance_y, system_cycle_linear_distance_y);
@@ -92,6 +92,14 @@ void move_motor_linear_motion(String package_income){
   uint32_t step_y = degree_to_step_converter(degree_y, motor_fullcycle_step_y, microstep_coeff_y);
   
   //--------------------------- Test System Monitor
+  Serial.print("System cycle linear distance x: ");
+  Serial.println(system_cycle_linear_distance_x);
+  Serial.print("System cycle linear distance y: ");
+  Serial.println(system_cycle_linear_distance_y);
+  Serial.print("Distance x (mm): ");
+  Serial.println(distance_x);
+  Serial.print("Distance y (mm): ");
+  Serial.println(distance_y);
   Serial.print("Degree x: ");
   Serial.println(degree_x);
   Serial.print("Degree y: ");

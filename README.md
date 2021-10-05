@@ -85,7 +85,8 @@ The first element of the array (array[1]) is the return type (P for package, F f
 		EP0008 -> Invalid package/command size
 
 *List of Funtion Errors:*
-	  EF0001 -> "Parse Function" error in code
+		EF0001 -> "Parse Function" error in code
+		EF0002 -> Invalid Driving Mechanism
 
 - #### Feedback ID and structure:
   #### Example Package: FSXXXX
