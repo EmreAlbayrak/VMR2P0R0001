@@ -4,9 +4,9 @@
 
 # Protocol Information
 
-	The system communicates over UART protocol, 9600 baud rate, 8-bit, no handshake.
+The system communicates over UART protocol, 9600 baud rate, 8-bit, no handshake.
 
-	The current verion tested on STM32F303RE Nucleo Board With built-in ST-Link V2 UART Converter.
+The current verion tested on STM32F303RE Nucleo Board With built-in ST-Link V2 UART Converter.
 
 ### 1. Set Commands:
 
