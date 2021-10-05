@@ -68,7 +68,10 @@ Following nine digits are null bits to match the package size expected from robo
 	Element number eleven to seventeen are delta distance on y-axis in units of micrometer.
 
 ### 3. Feedback Packages
-- #### Error ID and structure:
+
+Every feedback package starts with ">" character as an indicator. Computer software should just tooks the feedback packages starting wit ">" character (FeedbackString[0]). MCU sends different kind of informations as a feedback (calculation results, current status etc.) for service monitoring. Computer software should only took the packages starting with ">" to avoid took wrong feedback.
+
+- #### Error Package structure and IDs:
 	#### Example Package: EPXXXX
 
 Where the zeroth element of the array (array[0]) is command type ("E" for errors).
@@ -77,16 +80,16 @@ The first element of the array (array[1]) is the return type (P for package, F f
 
 *Package Errors:*
 
-		EP0001 -> Package size mismatch
-		EP0002 -> Invalid command type (array[0] error)
-		EP0003 -> Invalid motion type (array[1] error)
-		EP0004 -> Invalid direction of rotation for x-axis (array[2])
-		EP0005 -> Invalid direction of rotation for y-axis (array[10])
-		EP0006 -> Invalid set parameter ID (array[1], array[2])
+		>EP0001 -> Package size mismatch
+		>EP0002 -> Invalid command type (array[0] error)
+		>EP0003 -> Invalid motion type (array[1] error)
+		>EP0004 -> Invalid direction of rotation for x-axis (array[2])
+		>EP0005 -> Invalid direction of rotation for y-axis (array[10])
+		>EP0006 -> Invalid set parameter ID (array[1], array[2])
 
 *List of Funtion Errors:*
-		EF0001 -> "Parse Function" error in code
-		EF0002 -> Invalid Driving Mechanism
+		>EF0001 -> "Parse Function" error in code
+		>EF0002 -> Invalid Driving Mechanism
 
 - #### Feedback ID and structure:
   #### Example Package: FSXXXX
@@ -99,35 +102,35 @@ Next four element of the array is the feedback ID.
 
 *List of Feedback Packages:*
 
-		 FS0001 -> threat_distance_x set done.
-		 FS0002 -> threat_distance_y set done.
-		 FS0003 -> pulley_diameter_x set done.
-		 FS0004 -> pulley_diameter_y set done.
-		 FS0005 -> motor_fullcycle_step_x set done.
-		 FS0006 -> motor_fullcycle_step_y set done.
-		 FS0007 -> microstep_coeff_x set done.
-		 FS0008 -> microstep_coeff_y set done.
-		 FS0009 -> max_speed_x set done.
-		 FS0010 -> max_speed_y set done.
-		 FS0011 -> step_delay_speed_steady_x set done.
-		 FS0012 -> step_delay_speed_steady_y set done.
-		 FS0013 -> step_delay_speed_min_x set done.
-		 FS0014 -> step_delay_speed_min_y set done.
-		 FS0015 -> step_delay_instantaneous_x set done.
-		 FS0016 -> step_delay_instantaneous_y set done.
-		 FS0017 -> step_delay_acceleration_avg_x set done.
-		 FS0018 -> step_delay_acceleration_avg_y set done.
-		 FS0019 -> step_count_acceleration_x set done.
-		 FS0020 -> step_count_acceleration_y set done.
-		 FS0021 -> input_speed_steady_x set done.
-		 FS0022 -> input_speed_steady_y set done.
-		 FS0023 -> input_acceleration_x set done.
-		 FS0024 -> input_acceleration_y set done.
-		 FS0025 -> delta_t_x set done.
-		 FS0026 -> delta_t_y set done.
-		 FS0027 -> driving_mechanism_x set done.
-		 FS0028 -> driving_mechanism_y set done.
+		 >FS0001 -> threat_distance_x set done.
+		 >FS0002 -> threat_distance_y set done.
+		 >FS0003 -> pulley_diameter_x set done.
+		 >FS0004 -> pulley_diameter_y set done.
+		 >FS0005 -> motor_fullcycle_step_x set done.
+		 >FS0006 -> motor_fullcycle_step_y set done.
+		 >FS0007 -> microstep_coeff_x set done.
+		 >FS0008 -> microstep_coeff_y set done.
+		 >FS0009 -> max_speed_x set done.
+		 >FS0010 -> max_speed_y set done.
+		 >FS0011 -> step_delay_speed_steady_x set done.
+		 >FS0012 -> step_delay_speed_steady_y set done.
+		 >FS0013 -> step_delay_speed_min_x set done.
+		 >FS0014 -> step_delay_speed_min_y set done.
+		 >FS0015 -> step_delay_instantaneous_x set done.
+		 >FS0016 -> step_delay_instantaneous_y set done.
+		 >FS0017 -> step_delay_acceleration_avg_x set done.
+		 >FS0018 -> step_delay_acceleration_avg_y set done.
+		 >FS0019 -> step_count_acceleration_x set done.
+		 >FS0020 -> step_count_acceleration_y set done.
+		 >FS0021 -> input_speed_steady_x set done.
+		 >FS0022 -> input_speed_steady_y set done.
+		 >FS0023 -> input_acceleration_x set done.
+		 >FS0024 -> input_acceleration_y set done.
+		 >FS0025 -> delta_t_x set done.
+		 >FS0026 -> delta_t_y set done.
+		 >FS0027 -> driving_mechanism_x set done.
+		 >FS0028 -> driving_mechanism_y set done.
 
-		 FP0001 -> Move Package Confirmed
+		 >FP0001 -> Move Package Confirmed
 
-		 FA0001 -> Action Accomplished
+		 >FA0001 -> Action Accomplished
