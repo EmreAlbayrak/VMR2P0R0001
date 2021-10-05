@@ -4,8 +4,8 @@
 #include <Arduino.h>
 
 //--------------------------------------------------------------------- Motor Control Parameters
-uint32_t threat_distance_x = 10000; // In units of micrometer
-uint32_t threat_distance_y = 10000; // In units of micrometer
+float_t thread_distance_x = 10; // In units of millimeter
+float_t thread_distance_y = 10; // In units of millimeter
 float_t pulley_diameter_x = 38.2; //In units of millimeter
 float_t pulley_diameter_y = 38.2; //In units of millimeter
 uint32_t motor_fullcycle_step_x = 400; // Motor's full cycle number of steps

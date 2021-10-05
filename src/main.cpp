@@ -7,14 +7,14 @@
 #include <parameters.h>
 
 //--------------------------------------------------------------------- Motor Pin Parameters
-int direction_pin_x = 2;
-int direction_pin_y = 4;
-int pulse_pin_x = 3;
-int pulse_pin_y = 5;
+const int direction_pin_x = 2;
+const int direction_pin_y = 4;
+const int pulse_pin_x = 3;
+const int pulse_pin_y = 5;
 //--------------------------------------------------------------------- Serial Communication Parameters
 String serial_package;
 //---------------------------------------------------------------------
-float parse_distance(String package_income,char axis){
+float_t parse_distance(String package_income,char axis){
   String delta_string;
   float delta_float = 0;
   if(axis == 'x'){
@@ -33,8 +33,8 @@ float parse_distance(String package_income,char axis){
 }
 
 void speed_acceleration_calculator_leadscrew(){
-  step_delay_speed_steady_x = threat_distance_x*(10^6) / (input_speed_steady_x*motor_fullcycle_step_x*microstep_coeff_x*2);
-  step_delay_speed_steady_y = threat_distance_y*(10^6) / (input_speed_steady_y*motor_fullcycle_step_y*microstep_coeff_y*2);
+  step_delay_speed_steady_x = thread_distance_x*(10^6) / (input_speed_steady_x*motor_fullcycle_step_x*microstep_coeff_x*2);
+  step_delay_speed_steady_y = thread_distance_y*(10^6) / (input_speed_steady_y*motor_fullcycle_step_y*microstep_coeff_y*2);
   delta_t_x = input_speed_steady_x / input_acceleration_x; // Delta time that acceleration going to be applied on x-axis
   delta_t_y = input_speed_steady_y / input_acceleration_y; // Delta time that acceleration going to be applied on y-axis
   step_delay_acceleration_avg_x = (step_delay_speed_min_x - step_delay_speed_steady_x) / 2; // Assuming acceleration is 0 and speed is constant at step_delay_speed_steady_x/2 on x-axis
@@ -54,7 +54,15 @@ void speed_acceleration_calculator_pulley(){
   step_count_acceleration_calculated_y = delta_t_y*(10^6) / step_delay_acceleration_avg_y * 2; //Number of steps that acceleration going to be applied on y-axis (2 delay for one step)
 }
 
-void move_motor(String package_income){
+uint32_t degree_to_step_converter(float degree, uint32_t motor_full_cycle_step,uint32_t micrestep_coeff){
+  return (degree * motor_full_cycle_step * micrestep_coeff / 360);
+}
+
+float_t linear_to_rotational_converter(float distance, uint32_t system_cycle_linear_distance){
+  return ((distance / system_cycle_linear_distance) * 360);
+}
+
+void move_motor_linear_motion(String package_income){
 //--------------------------------------------------------------------- Motor Direction of Rotation
   if(package_income[2] == 'P'){
     digitalWrite(direction_pin_x, HIGH);
@@ -78,10 +86,21 @@ void move_motor(String package_income){
   float distance_x = parse_distance(package_income,'x');
   float distance_y = parse_distance(package_income,'y');
 //--------------------------------------------------------------------- Distance to Degree & Degree to Step Conversions
-  float degree_x = (distance_x / system_cycle_linear_distance_x) * 360;
-  float degree_y = (distance_y / system_cycle_linear_distance_y) * 360;
-  int step_x = degree_x * (360 / motor_fullcycle_step_x) / microstep_coeff_x;
-  int step_y = degree_y * (360 / motor_fullcycle_step_y) / microstep_coeff_y;
+  float degree_x = linear_to_rotational_converter(distance_x, system_cycle_linear_distance_x);
+  float degree_y = linear_to_rotational_converter(distance_y, system_cycle_linear_distance_y);
+  uint32_t step_x = degree_to_step_converter(degree_x, motor_fullcycle_step_x, microstep_coeff_x);
+  uint32_t step_y = degree_to_step_converter(degree_y, motor_fullcycle_step_y, microstep_coeff_y);
+  
+  //--------------------------- Test System Monitor
+  Serial.print("Degree x: ");
+  Serial.println(degree_x);
+  Serial.print("Degree y: ");
+  Serial.println(degree_y);
+  Serial.print("Step x: ");
+  Serial.println(step_x);
+  Serial.print("Step y: ");
+  Serial.println(step_y);
+
 //--------------------------------------------------------------------- Easter Egg
   if(step_x / 2 > step_count_acceleration_calculated_x){
     step_count_acceleration_x = step_count_acceleration_calculated_x;
@@ -142,11 +161,11 @@ void set_parameters(String package_income){
 
   switch (package_id_set_int){
     case 1:
-      threat_distance_x = parameter_value_set_int;
+      thread_distance_x = parameter_value_set_int;
       Serial.println("FS0001");
       break;
     case 2:
-      threat_distance_y = parameter_value_set_int;
+      thread_distance_y = parameter_value_set_int;
       Serial.println("FS0002");
       break;
     case 3:
@@ -261,16 +280,15 @@ void set_parameters(String package_income){
   }
 }
 
-void command_analyser(String package_income){ 
+void command_analyser(String package_income){ // TODO: Add motion type selector (array[1])
   int package_income_length = package_income.length();
-
-  //------------------------------- Test monitor here
+/*  //------------------------------- Test monitor here
   Serial.print("Package Length: ");
   Serial.println(package_income_length);
-
+*/
   if(package_income_length = 18){
     if(package_income[0] == 'M'){
-      move_motor(package_income);
+      move_motor_linear_motion(package_income);
     }
     else if(package_income[0] == 'S'){
       set_parameters(package_income);
@@ -301,8 +319,8 @@ void setup() {
     speed_acceleration_calculator_pulley();
   }
   else{
-    system_cycle_linear_distance_x = threat_distance_x;
-    system_cycle_linear_distance_y = threat_distance_y;
+    system_cycle_linear_distance_x = thread_distance_x;
+    system_cycle_linear_distance_y = thread_distance_y;
     speed_acceleration_calculator_leadscrew();
   }
 }
