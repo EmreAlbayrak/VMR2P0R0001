@@ -129,7 +129,7 @@ void move_motor(String package_income){
   Serial.println("FA0001");
 }
 
-void goto_point(String package_income){  //TODO: Add destination point feature here 
+void goto_point(String package_income){ //TODO: Add destination point feature here 
 
 }
 
@@ -261,7 +261,7 @@ void set_parameters(String package_income){
   }
 }
 
-void command_analyser(String package_income){ // TODO: Add package checksum
+void command_analyser(String package_income){ 
   int package_income_length = package_income.length();
 
   //------------------------------- Test monitor here
