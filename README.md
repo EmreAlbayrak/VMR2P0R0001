@@ -90,8 +90,9 @@ The first element of the array (array[1]) is the return type (P for package, F f
 		>EP0006 -> Invalid set parameter ID (array[1], array[2])
 
 *List of Funtion Errors:*
-		>EF0001 -> "Parse Function" error in code
+		>EF0001 -> "Parse Distance" Function error
 		>EF0002 -> Invalid Driving Mechanism
+		>EF0003 -> Invalid Axis Input Function
 
 - #### Feedback ID and structure:
   #### Example Package: FSXXXX
@@ -136,3 +137,6 @@ Next four element of the array is the feedback ID.
 		 >FP0001 -> Move Package Confirmed
 
 		 >FA0001 -> Action Accomplished
+
+# EEPROM Adress List of Parameters
+
