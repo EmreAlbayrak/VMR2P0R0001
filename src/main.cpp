@@ -14,6 +14,118 @@ const int pulse_pin_y = 5;
 //--------------------------------------------------------------------- Serial Communication Parameters
 String serial_package;
 //---------------------------------------------------------------------
+void system_monitor_parameters(){
+  Serial.println("---------------------------------------------------------------------- System Monitor Start");
+
+  Serial.print("Size of uint64_t: ");
+  Serial.println(sizeof(uint64_t));
+
+  Serial.print("Size of uint32_t: ");
+  Serial.println(sizeof(uint32_t));
+
+  Serial.print("Size of uint16_t: ");
+  Serial.println(sizeof(uint16_t));
+
+  Serial.print("Size of int: ");
+  Serial.println(sizeof(int));
+
+  Serial.print("Size of float_t: ");
+  Serial.println(sizeof(float_t));
+
+  Serial.print("Size of float: ");
+  Serial.println(sizeof(float));
+
+  Serial.print("Thread Distance x-axis (mm): ");
+  Serial.println(thread_distance_x);
+  
+  Serial.print("Thread Distance y-axis (mm): ");
+  Serial.println(thread_distance_y);
+  
+  Serial.print("Pulley Diameter x-axis (mm): ");
+  Serial.println(pulley_diameter_x);
+
+  Serial.print("Pulley Diameter y-axis (mm): ");
+  Serial.println(pulley_diameter_y);
+
+  Serial.print("Motor Full Cycle x-axis (# of steps): ");
+  Serial.println(motor_fullcycle_step_x);
+
+  Serial.print("Motor Full Cycle y-axis (# of Steps): ");
+  Serial.println(motor_fullcycle_step_y);
+
+  Serial.print("Microstep Coeff x-axis: ");
+  Serial.println(microstep_coeff_x);
+
+  Serial.print("Microstep Coeff y-axis: ");
+  Serial.println(microstep_coeff_y);
+
+  Serial.print("Max Speed x-axis (mm/s): ");
+  Serial.println(max_speed_x);
+
+  Serial.print("Max Speed y-axis (mm/s): ");
+  Serial.println(max_speed_y);
+
+  Serial.print("Step Delay Speed Steady x-axis (us): ");
+  Serial.println(step_delay_speed_steady_x);
+
+  Serial.print("Step Delay Speed Steady y-axis (us): ");
+  Serial.println(step_delay_speed_steady_y);
+
+  Serial.print("Step Delay Speed Min x-axis (us): ");
+  Serial.println(step_delay_speed_min_x);
+
+  Serial.print("Step Delay Speed Min y-axis (us): ");
+  Serial.println(step_delay_speed_min_y);
+
+  Serial.print("Step Delay Speed Instantaneous x-axis (us): ");
+  Serial.println(step_delay_instantaneous_x);
+
+  Serial.print("Step Delay Speed Instantaneous y-axis (us): ");
+  Serial.println(step_delay_instantaneous_y);
+
+  Serial.print("Step Delay Acceleration Average x-axis (us): ");
+  Serial.println(step_delay_acceleration_avg_x);
+
+  Serial.print("Step Delay Acceleration Average y-axis (us): ");
+  Serial.println(step_delay_acceleration_avg_y);
+
+  Serial.print("Step Count Acceleration Calculated x-axis (# of steps): ");
+  Serial.println(step_count_acceleration_calculated_x);
+  
+  Serial.print("Step Count Acceleration Calculated y-axis (# of steps): ");
+  Serial.println(step_count_acceleration_calculated_y);
+
+  Serial.print("Step Count Acceleration x-axis (Applied) (# of steps): ");
+  Serial.println(step_count_acceleration_x);
+
+  Serial.print("Step Count Acceleration y-axis (Applied) (# of steps): ");
+  Serial.println(step_count_acceleration_y);
+
+  Serial.print("Input Speed Steady x-axis (mm/s): ");
+  Serial.println(input_speed_steady_x);
+
+  Serial.print("Input Speed Steady y-axis (mm/s): ");
+  Serial.println(input_speed_steady_y);
+
+  Serial.print("Input Acceleration x-axis (mm/s^2): ");
+  Serial.println(input_acceleration_x);
+
+  Serial.print("Input Acceleration y-axis (mm/s^2): ");
+  Serial.println(input_acceleration_y);
+
+  Serial.print("Delta t x-axis (s): ");
+  Serial.println(delta_t_x);
+
+  Serial.print("Delta y y-axis (s): ");
+  Serial.println(delta_t_y);
+
+  Serial.print("Driving Mechanism (0->Pulley, 1->Lead Screw): ");
+  Serial.println(driving_mechanism);
+
+  Serial.println("---------------------------------------------------------------------- System Monitor End");
+
+}
+
 float_t parse_distance(String package_income,char axis){
   String delta_string;
   float_t delta_float = 0;
@@ -55,7 +167,7 @@ void speed_acceleration_calculator_pulley(){
   step_count_acceleration_calculated_y = delta_t_y*(10^6) / step_delay_acceleration_avg_y * 2; //Number of steps that acceleration going to be applied on y-axis (2 delay for one step)
 }
 
-uint32_t degree_to_step_converter(float_t degree, uint32_t motor_full_cycle_step,uint32_t micrestep_coeff){
+uint16_t degree_to_step_converter(float_t degree, uint32_t motor_full_cycle_step,uint32_t micrestep_coeff){
   return (degree * motor_full_cycle_step * micrestep_coeff / 360);
 }
 
@@ -91,27 +203,6 @@ void move_motor_linear_motion(String package_income){
   float degree_y = linear_to_rotational_converter(distance_y, system_cycle_linear_distance_y);
   uint32_t step_x = degree_to_step_converter(degree_x, motor_fullcycle_step_x, microstep_coeff_x);
   uint32_t step_y = degree_to_step_converter(degree_y, motor_fullcycle_step_y, microstep_coeff_y);
-  
-  //----------------------------------------------- Test System Monitor
-  Serial.print("Driving Mechanism: ");
-  Serial.println(driving_mechanism);
-  Serial.print("System cycle linear distance x: ");
-  Serial.println(system_cycle_linear_distance_x);
-  Serial.print("System cycle linear distance y: ");
-  Serial.println(system_cycle_linear_distance_y);
-  Serial.print("Distance x (mm): ");
-  Serial.println(distance_x);
-  Serial.print("Distance y (mm): ");
-  Serial.println(distance_y);
-  Serial.print("Degree x: ");
-  Serial.println(degree_x);
-  Serial.print("Degree y: ");
-  Serial.println(degree_y);
-  Serial.print("Step x: ");
-  Serial.println(step_x);
-  Serial.print("Step y: ");
-  Serial.println(step_y);
-  //-----------------------------------------------
 //--------------------------------------------------------------------- Easter Egg
   if(step_x / 2 > step_count_acceleration_calculated_x){
     step_count_acceleration_x = step_count_acceleration_calculated_x;
@@ -127,6 +218,7 @@ void move_motor_linear_motion(String package_income){
   }
 //--------------------------------------------------------------------- Send Feedback (Move Command Confirmed)
   Serial.println(">FP0001");
+  system_monitor_parameters();
 //--------------------------------------------------------------------- Driving x-axis motor
   for(int step_counter_x = 0 ; step_counter_x < step_x ; step_counter_x++){
     digitalWrite(pulse_pin_x, HIGH);
@@ -154,6 +246,7 @@ void move_motor_linear_motion(String package_income){
     else if(step_counter_y > step_y - step_count_acceleration_y){
       step_delay_instantaneous_y = map(step_counter_y, step_y - step_count_acceleration_calculated_y, step_y, step_delay_speed_steady_y, step_delay_speed_min_y);
     }
+    
   }
 //---------------------------------------------------------------------- Send Feedback (Action Accomplished)
   Serial.println(">FA0001"); 
@@ -312,7 +405,7 @@ void command_analyser(String package_income){ // TODO: Add motion type selector 
       set_parameters(package_income);
     }
     else if(package_income[0] == 'G'){
-      goto_point(package_income);
+      system_monitor_parameters();
     }
     else{
       Serial.println(">EP0002");
@@ -325,12 +418,12 @@ void command_analyser(String package_income){ // TODO: Add motion type selector 
 
 void setup() { //TODO: Check "diriving_mechanism: 1" bug. Change the type from "int" to "char" and try again. 
   Serial.begin(9600);
-//---------------------------------------- Motor Pin Definitions
+//---------------------------------------------------------------------- Motor Pin Definitions
   pinMode(direction_pin_x, OUTPUT);
   pinMode(direction_pin_y, OUTPUT);
   pinMode(pulse_pin_x, OUTPUT);
   pinMode(pulse_pin_y, OUTPUT);
-//----------------------------------------
+//---------------------------------------------------------------------- Driving Mechanism Selection
   if(driving_mechanism == '0'){
     system_cycle_linear_distance_x = pi*pulley_diameter_x;
     system_cycle_linear_distance_y = pi*pulley_diameter_y;
@@ -346,6 +439,8 @@ void setup() { //TODO: Check "diriving_mechanism: 1" bug. Change the type from "
   else{
     Serial.print(">EF0002");
   }
+//---------------------------------------------------------------------- System Monitor
+system_monitor_parameters();
 }
 
 void loop() {
