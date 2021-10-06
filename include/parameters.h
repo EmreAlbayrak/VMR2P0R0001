@@ -4,16 +4,16 @@
 #include <Arduino.h>
 
 //--------------------------------------------------------------------- Motor Control Parameters
-float_t thread_distance_x = 10; // In units of millimeter
-float_t thread_distance_y = 10; // In units of millimeter
+uint16_t thread_distance_x = 10; // In units of millimeter
+uint16_t thread_distance_y = 10; // In units of millimeter
 float_t pulley_diameter_x = 38.2; //In units of millimeter
 float_t pulley_diameter_y = 38.2; //In units of millimeter
-uint32_t motor_fullcycle_step_x = 400; // Motor's full cycle number of steps
-uint32_t motor_fullcycle_step_y = 400; // Motor's full cycle number of steps
+uint16_t motor_fullcycle_step_x = 400; // Motor's full cycle number of steps
+uint16_t motor_fullcycle_step_y = 400; // Motor's full cycle number of steps
 float_t microstep_coeff_x = 1; // Motor driver's microstep setting
 float_t microstep_coeff_y = 1; // Motor driver's microstep setting
-uint32_t max_speed_x = 3; // In units of cm/s
-uint32_t max_speed_y = 3; // In Units of cm/s
+uint32_t max_speed_x = 150; // In units of mm/s
+uint32_t max_speed_y = 150; // In Units of mm/s
 uint32_t step_delay_speed_steady_x = 1000; // In units of microsecond
 uint32_t step_delay_speed_steady_y = 1000; // In units of microsecond
 uint32_t step_delay_speed_min_x = 5000; // In units of microsecond
