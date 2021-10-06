@@ -28,7 +28,7 @@ uint32_t input_speed_steady_x = 100; // In units of mm/s
 uint32_t input_speed_steady_y = 100; // In units of mm/s
 uint32_t input_acceleration_x = 10; // In units of mm/(s^2)
 uint32_t input_acceleration_y = 10; // In units of mm/(s^2)
-uint32_t driving_mechanism = 0; // "0" -> Pulley System, "1" -> Lead Screw 
+char driving_mechanism = '0'; // "0" -> Pulley System, "1" -> Lead Screw 
 float_t delta_t_x; // Time that acceleration is going to apply on x-axis
 float_t delta_t_y; // Time that acceleration is going to apply on y-axis
 uint32_t step_count_acceleration_calculated_x; //Memory for step_count_acceleration_x calculation 

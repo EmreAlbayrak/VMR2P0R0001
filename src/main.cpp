@@ -126,7 +126,7 @@ void move_motor_linear_motion(String package_income){
     step_count_acceleration_y = step_y/2;
   }
 //--------------------------------------------------------------------- Send Feedback (Move Command Confirmed)
-  Serial.println("FP0001");
+  Serial.println(">FP0001");
 //--------------------------------------------------------------------- Driving x-axis motor
   for(int step_counter_x = 0 ; step_counter_x < step_x ; step_counter_x++){
     digitalWrite(pulse_pin_x, HIGH);
@@ -156,7 +156,7 @@ void move_motor_linear_motion(String package_income){
     }
   }
 //---------------------------------------------------------------------- Send Feedback (Action Accomplished)
-  Serial.println("FA0001"); 
+  Serial.println(">FA0001"); 
 }
 
 void goto_point(String package_income){ //TODO: Add destination point feature here 
@@ -331,13 +331,13 @@ void setup() { //TODO: Check "diriving_mechanism: 1" bug. Change the type from "
   pinMode(pulse_pin_x, OUTPUT);
   pinMode(pulse_pin_y, OUTPUT);
 //----------------------------------------
-  if(driving_mechanism = 0){
+  if(driving_mechanism == '0'){
     system_cycle_linear_distance_x = pi*pulley_diameter_x;
     system_cycle_linear_distance_y = pi*pulley_diameter_y;
     speed_acceleration_calculator_pulley();
     Serial.println("Checkpoint 1");
   }
-  else if(driving_mechanism = 1){
+  else if(driving_mechanism == '1'){
     system_cycle_linear_distance_x = thread_distance_x;
     system_cycle_linear_distance_y = thread_distance_y;
     speed_acceleration_calculator_leadscrew();
