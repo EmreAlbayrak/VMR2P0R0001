@@ -10,7 +10,7 @@
 const int direction_pin_x = 2;
 const int direction_pin_y = 4;
 const int pulse_pin_x = 3;
-const int pulse_pin_y = 5;
+const int pulse_pin_y = 5; 
 //--------------------------------------------------------------------- Serial Communication Parameters
 String serial_package;
 //---------------------------------------------------------------------
