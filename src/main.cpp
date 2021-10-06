@@ -1,7 +1,7 @@
 
 // Library includes
 #include <Arduino.h>
-#include <EEPROM.h> //TODO: Add eeprom feature to store the parameters
+#include <EEPROM.h>
 
 // User defined includes
 #include <parameters.h>
@@ -266,34 +266,42 @@ void set_parameters(String package_income){
   switch (package_id_set_int){
     case 1:
       thread_distance_x = parameter_value_set_int;
+      EEPROM.put(address_thread_distance_x, thread_distance_x);
       Serial.println(">FS0001");
       break;
     case 2:
       thread_distance_y = parameter_value_set_int;
+      EEPROM.put(address_thread_distance_y, thread_distance_y);
       Serial.println(">FS0002");
       break;
     case 3:
-      pulley_diameter_x = parameter_value_set_int / 4;
+      pulley_diameter_x = parameter_value_set_int / 10;
+      EEPROM.put(address_pulley_diameter_x, pulley_diameter_x);
       Serial.println(">FS0003");
       break;
     case 4:
-      pulley_diameter_y = parameter_value_set_int / 4;
+      pulley_diameter_y = parameter_value_set_int / 10;
+      EEPROM.put(address_pulley_diameter_y, pulley_diameter_y);
       Serial.println(">FS0004");
       break;    
     case 5:
       motor_fullcycle_step_x = parameter_value_set_int;
+      EEPROM.put(address_motor_fullcycle_step_x, motor_fullcycle_step_x);
       Serial.println(">FS0005");
       break;    
     case 6:
       motor_fullcycle_step_y = parameter_value_set_int;
+      EEPROM.put(address_motor_fullcycle_step_y, motor_fullcycle_step_y);
       Serial.println(">FS0006");
       break;
     case 7:
       microstep_coeff_x = parameter_value_set_int;
+      EEPROM.put(address_microstep_coeff_x, microstep_coeff_x);
       Serial.println(">FS0007");
       break;
     case 8:
       microstep_coeff_y = parameter_value_set_int;
+      EEPROM.put(address_microstep_coeff_y, microstep_coeff_y);
       Serial.println(">FS0008");
       break;
     case 9:
@@ -346,18 +354,22 @@ void set_parameters(String package_income){
       break;
     case 21:
       input_speed_steady_x = parameter_value_set_int;
+      EEPROM.put(address_input_speed_steady_x, input_speed_steady_x);
       Serial.println(">FS0021");
       break;
     case 22:
       input_speed_steady_y = parameter_value_set_int;
+      EEPROM.put(address_input_speed_steady_y, input_speed_steady_y);
       Serial.println(">FS0022");
       break;
     case 23:
       input_acceleration_x = parameter_value_set_int;
+      EEPROM.put(address_input_acceleration_x, input_acceleration_x);
       Serial.println(">FS0023");
       break;
     case 24:
       input_acceleration_y = parameter_value_set_int;
+      EEPROM.put(address_input_acceleration_y, input_acceleration_y);
       Serial.println(">FS0024");
       break;
     case 25:
@@ -370,10 +382,12 @@ void set_parameters(String package_income){
       break;
     case 27:
       driving_mechanism = parameter_value_set_int;
+      EEPROM.put(address_driving_mechanism, driving_mechanism);
       Serial.println(">FS0027");
       break;
     case 28:
       driving_mechanism = parameter_value_set_int;
+      EEPROM.put(address_driving_mechanism, driving_mechanism);
       Serial.println(">FS0028");
       break;
     default:
@@ -391,6 +405,13 @@ void set_parameters(String package_income){
   }
 }
 
+void get_parameters_eeprom(){
+  EEPROM.get(address_thread_distance_x, thread_distance_x);
+  EEPROM.get(address_thread_distance_y, thread_distance_y);
+  EEPROM.get(address_pulley_diameter_x, pulley_diameter_y);
+  EEPROM.get(address_pulley_diameter_y, pulley_diameter_y);
+}
+
 void command_analyser(String package_income){ // TODO: Add motion type selector linear or rotational (array[1])
   uint32_t package_income_length = package_income.length();
 /*  //------------------------------- Test monitor here
@@ -405,6 +426,7 @@ void command_analyser(String package_income){ // TODO: Add motion type selector 
       set_parameters(package_income);
     }
     else if(package_income[0] == 'G'){
+      get_parameters_eeprom();
       system_monitor_parameters();
     }
     else{
@@ -440,6 +462,7 @@ void setup() { //TODO: Check "diriving_mechanism: 1" bug. Change the type from "
     Serial.print(">EF0002");
   }
 //---------------------------------------------------------------------- System Monitor
+get_parameters_eeprom();
 system_monitor_parameters();
 }
 
