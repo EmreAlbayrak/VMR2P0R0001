@@ -144,18 +144,18 @@ Some parameters are available to set from user, and those parameters requires to
 
 *List of Feedback Packages*
 
-		Parameter | Variable Type | Address
-		--- | --- | ---
-		thread_distance_x | uint16_t | 0
-		thread_distance_y | uint16_t | 2
-		pulley_diameter_x | float_t | 4
-		pulley_diameter_y | float_t | 8
-		motor_fullcycle_step_x | uint16_t | 12
-		motor_fullcycle_step_y | uint16_t | 14
-		microstep_coeff_x | uint8_t | 16
-		microstep_coeff_y | uint8_t | 17
-		input_speed_steady_x | uint16_t | 18
-		input_speed_steady_y | uint16_t | 20
-		input_acceleration_x | uint8_t | 22
-		input_acceleration_y | uint8_t | 23
-		driving_mechanism | char16_t |24 
+		| Parameter | Variable Type | Address |
+		| --- | --- | --- |
+		| thread_distance_x | uint16_t | 0 |
+		| thread_distance_y | uint16_t | 2 |
+		| pulley_diameter_x | float_t | 4 |
+		| pulley_diameter_y | float_t | 8 |
+		| motor_fullcycle_step_x | uint16_t | 12 |
+		| motor_fullcycle_step_y | uint16_t | 14 |
+		| microstep_coeff_x | uint8_t | 16 |
+		| microstep_coeff_y | uint8_t | 17 |
+		| input_speed_steady_x | uint16_t | 18 |
+		| input_speed_steady_y | uint16_t | 20 |
+		| input_acceleration_x | uint8_t | 22 |
+		| input_acceleration_y | uint8_t | 23 |
+		| driving_mechanism | char16_t | 24 |
