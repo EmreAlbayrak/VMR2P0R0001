@@ -4,7 +4,7 @@
 
 *This project is in development process. Some parts of the code migth not work as expected.*   
 
-# Protocol Information
+## Protocol Information
 
 The system communicates over UART protocol, 9600 baud rate, 8-bit, no handshake.
 
@@ -13,7 +13,7 @@ The current verion tested on STM32F303RE Nucleo Board With built-in ST-Link V2 U
 ### 1. Set Commands:
 
 - #### List of the IDs of "set" parameter and package structure:
-#### Example Package: SPPXXXXXXNNNNNNNNN   
+#### Example Package: SXX######NNNNNNNNN   
 
 Where first and second element of the array ("S" is the zeroth element) is the parameter ID represented by "P P".
 
@@ -23,55 +23,59 @@ Following nine digits are null bits to match the package size expected from robo
 
 *List of set parameters and IDs:*
 
-		01 -> thread_distance_x
-		02 -> thread_distance_y
-		03 -> pulley_diameter_x
-		04 -> pulley_diameter_y
-		05 -> motor_fullcycle_step_x
-		06 -> motor_fullcycle_step_y
-		07 -> microstep_coeff_x
-		08 -> microstep_coeff_y
-		09 -> max_speed_x
-		10 -> max_speed_y
-		11 -> step_delay_speed_steady_x
-		12 -> step_delay_speed_steady_y
-		13 -> step_delay_speed_min_x
-		14 -> step_delay_speed_min_y
-		15 -> step_delay_instantaneous_x
-		16 -> step_delay_instantaneous_y
-		17 -> step_delay_acceleration_avg_x
-		18 -> step_delay_acceleration_avg_y
-		19 -> step_count_acceleration_x
-		20 -> step_count_acceleration_y
-		21 -> input_speed_steady_x
-		22 -> input_speed_steady_y
-		23 -> input_acceleration_x
-		24 -> input_acceleration_y
-		25 -> delta_t_x
-		26 -> delta_t_y
-		27 -> driving_mechanism
+| Package ID | Parameter Name | Parameter Unit | Example Package | Usage |
+| ---------- | -------------- | -------------- | --------------- | ---- |
+| 01 | thread_distance_x | *mm* | *15mm Thread Distance:* S01000015NNNNNNNNN | Service |
+| 02 | thread_distance_y | *mm* | *20mm Thread Distance:* S01000020NNNNNNNNN | Service |
+| 03 | pulley_diameter_x | *mm\*10* | *38.2mm diameter:* S03000382NNNNNNNNN | Service |
+| 04 | pulley_diameter_y | *mm\*10* | *42.6mm diameter:* S04000426NNNNNNNNN | Service |
+| 05 | motor_fullcycle_step_x | *# of steps* | *400 Steps per cycle:* S05000400NNNNNNNNN | Service |
+| 06 | motor_fullcycle_step_y | *# of steps* | *200 Steps per cycle:* S06000200NNNNNNNNN | Service |
+| 07 | microstep_coeff_x | *Coeff* | *1/32 microstep:* S07000032NNNNNNNNN | Service |
+| 08 | microstep_coeff_y | *Coeff* | *1/16 microstep:* S08000016NNNNNNNNN | Service |
+| 09 | max_speed_x | *mm/s* | *10 (mm/s)* S09000010NNNNNNNNN* | Service |
+| 10 | max_speed_y | *mm/s* | *20 (mm/s)* S10000020NNNNNNNNN* | Service |
+| 11 | step_delay_speed_steady_x | *us* | *4000 us:* S11004000NNNNNNNNN | Test |
+| 12 | step_delay_speed_steady_y | *us* | *5000 us:* S12005000NNNNNNNNN | Test |
+| 13 | step_delay_speed_min_x | *us* | *400 us:* S13000400NNNNNNNNN | Test |
+| 14 | step_delay_speed_min_y | *us* | *500 us:* S14000500NNNNNNNNN | Test |
+| 15 | step_delay_instantaneous_x | *us* | | Test |
+| 16 | step_delay_instantaneous_y | *us* | | Test |
+| 17 | step_delay_acceleration_avg_x | *us* | | Test |
+| 18 | step_delay_acceleration_avg_y | *us* | | Test |
+| 19 | step_count_acceleration_x | *# of steps* | Test |
+| 20 | step_count_acceleration_y | *# of steps* | Test |
+| 21 | input_speed_steady_x | *mm/s* | | Test |
+| 22 | input_speed_steady_y | *mm/s* | | Test |
+| 23 | input_acceleration_x | *mm/s^2* | Test |
+| 24 | input_acceleration_y | *mm/s^2* | Test |
+| 25 | delta_t_x | *s* | | Test |
+| 26 | delta_t_y | *s* | | Test |
+| 27 | driving_mechanism | \- | | Test |
 
 ### 2. Move Commands structure
 - #### Command ID and structure:
-  #### Example Package: MLPXXXXXXXPXXXXXXX
+  #### Example Package: MXX#######X#######
 
 	Fix package size: 18 element string
 
 	Where the zeroth element of the array (array[0]) is command type ("M" for move).
 
-	The first element of the array (array[1]) is the motion type ("R" for rotational, "L" for linear).
+	The first element of the array (array[1]) is the motion input type ("L" for linear, "R" for rotational, "S" for step).
 
 	The second element of the array (array[2]) is the direction of motion on x-axis ("P" for positive, "N" for negative).
 
-	Element number three to nine are delta distance on x-axis in units of micrometers.
+	Element number three to nine are delta motion on x-axis in units of micrometers for linear, degrees for rotational, steps for step inputs..
 
-	The tenth element of the array (array[10]) is the direction of montion on y-axis.
+	The tenth element of the array (array[10]) is the direction of montion on y-axis ("P" for positive, "N" for negative).
 
-	Element number eleven to seventeen are delta distance on y-axis in units of micrometer.
+	Element number eleven to seventeen are delta motion on y-axis in units of micrometers for linear, degrees for rotational, steps for step inputs.
+
+	*Note: "P" Positive direction of motion means clockwise (CW), "N" Negative direction of motion means counter clockwise (CCW) on rotational inputs.*
 
 ### 3. Feedback Packages
 
-Every feedback package starts with ">" character as an indicator. Computer software should just tooks the feedback packages starting wit ">" character (FeedbackString[0]). MCU sends different kind of informations as a feedback (calculation results, current status etc.) for service monitoring. Computer software should only took the packages starting with ">" to avoid took wrong feedback.
+Every feedback package starts with ">" character as an indicator. Computer software should just tooks the feedback packages starting with ">" character (FeedbackString[0]). MCU sends different kind of informations as a feedback (calculation results, current status etc.) for service monitoring. Computer software should only took the packages starting with ">" to avoid took wrong feedback.
 
 - #### Error Package structure and IDs:
 	#### Example Package: EPXXXX
@@ -138,7 +142,7 @@ Next four element of the array is the feedback ID.
 
 		 >FA0001 -> Action Accomplished
 
-# EEPROM Adress List of Parameters
+## EEPROM Adress List of Parameters
 
 Some parameters are available to set from user, and those parameters requires to store in the EEPROM to enable to use them after reset.
 
@@ -159,3 +163,5 @@ Some parameters are available to set from user, and those parameters requires to
 | input_acceleration_x | uint8_t | 22 |
 | input_acceleration_y | uint8_t | 23 |
 | driving_mechanism | char16_t | 24 |
+
+##
