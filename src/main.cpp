@@ -10,7 +10,7 @@
 const int direction_pin_x = 2;
 const int direction_pin_y = 4;
 const int pulse_pin_x = 3;
-const int pulse_pin_y = 5; 
+const int pulse_pin_y = 5;
 //--------------------------------------------------------------------- Serial Communication Parameters
 String serial_package;
 //---------------------------------------------------------------------
@@ -175,7 +175,12 @@ float_t linear_to_rotational_converter(float_t distance, uint32_t system_cycle_l
   return ((distance / system_cycle_linear_distance) * 360);
 }
 
-void move_motor_linear_motion(String package_income){
+void move_motors(String package_income){
+//--------------------------------------------------------------------- Definition of Parameters
+float_t degree_x;
+float_t degree_y;
+uint32_t step_x;
+uint32_t step_y;
 //--------------------------------------------------------------------- Motor Direction of Rotation
   if(package_income[2] == 'P'){
     digitalWrite(direction_pin_x, HIGH);
@@ -195,14 +200,26 @@ void move_motor_linear_motion(String package_income){
   else {
     Serial.println(">EP0003");
   }
-//--------------------------------------------------------------------- Parse distance from package
-  float_t distance_x = parse_distance(package_income,'x');
-  float_t distance_y = parse_distance(package_income,'y');
-//--------------------------------------------------------------------- Distance to Degree & Degree to Step Conversions
-  float degree_x = linear_to_rotational_converter(distance_x, system_cycle_linear_distance_x);
-  float degree_y = linear_to_rotational_converter(distance_y, system_cycle_linear_distance_y);
-  uint32_t step_x = degree_to_step_converter(degree_x, motor_fullcycle_step_x, microstep_coeff_x);
-  uint32_t step_y = degree_to_step_converter(degree_y, motor_fullcycle_step_y, microstep_coeff_y);
+  if(package_income[1] == 'L'){
+    //--------------------------------------------------------------------- Parse distance from package
+      float_t distance_x = parse_distance(package_income,'x');
+      float_t distance_y = parse_distance(package_income,'y');
+    //--------------------------------------------------------------------- Distance to Degree & Degree to Step Conversions
+      degree_x = linear_to_rotational_converter(distance_x, system_cycle_linear_distance_x);
+      degree_y = linear_to_rotational_converter(distance_y, system_cycle_linear_distance_y);
+      step_x = degree_to_step_converter(degree_x, motor_fullcycle_step_x, microstep_coeff_x);
+      step_y = degree_to_step_converter(degree_y, motor_fullcycle_step_y, microstep_coeff_y);
+  }
+  else if(package_income[1] == 'R'){
+    degree_x = package_income.substring(3,10).toFloat();
+    degree_y = package_income.substring(11,18).toFloat();
+    step_x = degree_to_step_converter(degree_x, motor_fullcycle_step_x, microstep_coeff_x);
+    step_y = degree_to_step_converter(degree_y, motor_fullcycle_step_y, microstep_coeff_y);
+  }
+  else if(package_income[1] == 'S'){
+    step_x = package_income.substring(3,10).toInt();
+    step_y = package_income.substring(11,18).toInt();
+  }
 //--------------------------------------------------------------------- Easter Egg
   if(step_x / 2 > step_count_acceleration_calculated_x){
     step_count_acceleration_x = step_count_acceleration_calculated_x;
@@ -246,7 +263,6 @@ void move_motor_linear_motion(String package_income){
     else if(step_counter_y > step_y - step_count_acceleration_y){
       step_delay_instantaneous_y = map(step_counter_y, step_y - step_count_acceleration_calculated_y, step_y, step_delay_speed_steady_y, step_delay_speed_min_y);
     }
-    
   }
 //---------------------------------------------------------------------- Send Feedback (Action Accomplished)
   Serial.println(">FA0001"); 
@@ -412,7 +428,7 @@ void get_parameters_eeprom(){
   EEPROM.get(address_pulley_diameter_y, pulley_diameter_y);
 }
 
-void command_analyser(String package_income){ // TODO: Add motion type selector linear or rotational (array[1])
+void command_analyser(String package_income){ 
   uint32_t package_income_length = package_income.length();
 /*  //------------------------------- Test monitor here
   Serial.print("Package Length: ");
@@ -420,7 +436,7 @@ void command_analyser(String package_income){ // TODO: Add motion type selector 
 */
   if(package_income_length = 18){
     if(package_income[0] == 'M'){
-      move_motor_linear_motion(package_income);
+      move_motors(package_income);
     }
     else if(package_income[0] == 'S'){
       set_parameters(package_income);
