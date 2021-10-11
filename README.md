@@ -35,23 +35,23 @@ Following nine digits are null bits to match the package size expected from robo
 | 08 | microstep_coeff_y | *Coeff* | *1/16 microstep:* S08000016NNNNNNNNN | Input | Service |
 | 09 | max_speed_x | *mm/s* | *10 (mm/s):* S09000010NNNNNNNNN* | Input | Service |
 | 10 | max_speed_y | *mm/s* | *20 (mm/s):* S10000020NNNNNNNNN* | Input | Service |
-| 11 | step_delay_speed_steady_x | *us* | *4000 us:* S11004000NNNNNNNNN | Output | Test |
-| 12 | step_delay_speed_steady_y | *us* | *5000 us:* S12005000NNNNNNNNN | Output | Test |
-| 13 | step_delay_speed_min_x | *us* | *400 us:* S13000400NNNNNNNNN | Output | Test |
-| 14 | step_delay_speed_min_y | *us* | *500 us:* S14000500NNNNNNNNN | Output |Test |
-| 15 | step_delay_instantaneous_x | *us* | *1000 us:* S15001000NNNNNNNNN | Output | Test |
-| 16 | step_delay_instantaneous_y | *us* | *1300 us:* S16001300NNNNNNNNN | Output | Test |
-| 17 | step_delay_acceleration_avg_x | *us* | *500 us:* S17000500NNNNNNNNN | Output | Test |
-| 18 | step_delay_acceleration_avg_y | *us* | *700 us:* S18000700NNNNNNNNN | Output | Test |
+| 11 | step_delay_speed_steady_x | *microseconds* | *4000 us:* S11004000NNNNNNNNN | Output | Test |
+| 12 | step_delay_speed_steady_y | *microseconds* | *5000 us:* S12005000NNNNNNNNN | Output | Test |
+| 13 | step_delay_speed_min_x | *microseconds* | *400 us:* S13000400NNNNNNNNN | Input | Service |
+| 14 | step_delay_speed_min_y | *microseconds* | *500 us:* S14000500NNNNNNNNN | Input | Service |
+| 15 | step_delay_instantaneous_x | *microseconds* | *1000 us:* S15001000NNNNNNNNN | Output | Test |
+| 16 | step_delay_instantaneous_y | *microseconds* | *1300 us:* S16001300NNNNNNNNN | Output | Test |
+| 17 | step_delay_acceleration_avg_x | *microseconds* | *500 us:* S17000500NNNNNNNNN | Output | Test |
+| 18 | step_delay_acceleration_avg_y | *microseconds* | *700 us:* S18000700NNNNNNNNN | Output | Test |
 | 19 | step_count_acceleration_x | *# of steps* | *400 Steps:* S19000400NNNNNNNNN | Output | Test |
 | 20 | step_count_acceleration_y | *# of steps* | *800 Steps:* S20000800NNNNNNNNN | Output | Test |
 | 21 | input_speed_steady_x | *mm/s* | *100 mm/s:* S21000100NNNNNNNNN | Input | Service |
-| 22 | input_speed_steady_y | *mm/s* | *120 mm/s:* S22000120NNNNNNNNN | Input | Test |
-| 23 | input_acceleration_x | *mm/s^2* | *50 mm/s^2:* S23000050NNNNNNNNN | Input | Test |
-| 24 | input_acceleration_y | *mm/s^2* | *60 mm/s^2:* S24000060NNNNNNNNN | Input | Test |
-| 25 | delta_t_x | *s* | *2 s:* S25000002NNNNNNNNN | Output | Test |
-| 26 | delta_t_y | *s* | *2 s:* S26000002NNNNNNNNN | Output | Test |
-| 27 | driving_mechanism | 0 -> Pulley, 1 -> Lead Screw |  | Input | Service |
+| 22 | input_speed_steady_y | *mm/s* | *120 mm/s:* S22000120NNNNNNNNN | Input | Service |
+| 23 | input_acceleration_x | *mm/s^2* | *50 mm/s^2:* S23000050NNNNNNNNN | Input | Service |
+| 24 | input_acceleration_y | *mm/s^2* | *60 mm/s^2:* S24000060NNNNNNNNN | Input | Service |
+| 25 | delta_t_x | *seconds* | *2 s:* S25000002NNNNNNNNN | Output | Test |
+| 26 | delta_t_y | *seconds* | *2 s:* S26000002NNNNNNNNN | Output | Test |
+| 27 | driving_mechanism | 0 -> Pulley, 1 -> Lead Screw | *Pulley System:* S27000000NNNNNNNNN | Input | Service |
 
 ### 2. Move Commands structure
 - #### Command ID and structure:
@@ -75,7 +75,7 @@ Following nine digits are null bits to match the package size expected from robo
 
 ### 3. Feedback Packages
 
-Every feedback package starts with ">" character as an indicator. Computer software should just tooks the feedback packages starting with ">" character (FeedbackString[0]). MCU sends different kind of informations as a feedback (calculation results, current status etc.) for service monitoring. Computer software should only took the packages starting with ">" to avoid taking wrong feedback.
+Every feedback package starts with ">" character as an indicator. Computer software should just tooks the feedback packages starting with ">" character (FeedbackString[0]). MCU sends different kind of informations as a feedback (calculation results, status information etc.) for service monitoring. Computer software should only took the packages starting with ">" to avoid problems.
 
 - #### Error Package structure and IDs:
 	#### Example Package: EPXXXX
@@ -143,16 +143,16 @@ Next four element of the array is the feedback ID.
 | FS0026 | delta_t_y set done. |
 | FS0027 | driving_mechanism_x set done. |
 | FS0028 | driving_mechanism_y set done. |
-
-FP0001 -> Move Package Confirmed
-
-FA0001 -> Action Accomplished
+| | |
+| FP0001 | Move Package Confirmed |
+| | |
+| FA0001 | Action Accomplished |
 
 ## EEPROM Adress List of Parameters
 
 Some parameters are available to set from user, and those parameters requires to store in the EEPROM to enable to use them after reset.
 
-*List of Feedback Packages*
+*List of EEPROM adresses*
 
 | Parameter | Variable Type | EEPROM Address |
 | --------- | ------------- | ------- |
@@ -169,5 +169,7 @@ Some parameters are available to set from user, and those parameters requires to
 | input_acceleration_x | uint8_t | 22 |
 | input_acceleration_y | uint8_t | 23 |
 | driving_mechanism | char16_t | 24 |
+| step_delay_speed_min_x | uint32_t | 26 |
+| step_delay_speed_min_y | uint32_t | 30 |
 
-##
+## Hardware Connections 
