@@ -15,8 +15,28 @@ const int pulse_pin_y = 5;
 //--------------------------------------------------------------------- Serial Communication Parameters
 String serial_package;
 //---------------------------------------------------------------------
+
+void get_parameters_eeprom(){
+  EEPROM.get(address_thread_distance_x, thread_distance_x);
+  EEPROM.get(address_thread_distance_y, thread_distance_y);
+  EEPROM.get(address_pulley_diameter_x, pulley_diameter_y);
+  EEPROM.get(address_pulley_diameter_y, pulley_diameter_y);
+  EEPROM.get(address_motor_fullcycle_step_x, motor_fullcycle_step_x);
+  EEPROM.get(address_motor_fullcycle_step_y, motor_fullcycle_step_y);
+  EEPROM.get(address_microstep_coeff_x, microstep_coeff_x);
+  EEPROM.get(address_microstep_coeff_y, microstep_coeff_y);
+  EEPROM.get(address_input_speed_steady_x, input_speed_steady_x);
+  EEPROM.get(address_input_speed_steady_y, input_speed_steady_y);
+  EEPROM.get(address_input_acceleration_x, input_acceleration_x);
+  EEPROM.get(address_input_acceleration_y, input_acceleration_y);
+  EEPROM.get(address_driving_mechanism, driving_mechanism);
+  EEPROM.get(address_step_delay_speed_min_x, step_delay_speed_min_x);
+  EEPROM.get(address_step_delay_speed_min_y, step_delay_speed_min_y);
+}
+
 void system_monitor_parameters(){
   Serial.println("---------------------------------------------------------------------- System Monitor Start");
+  get_parameters_eeprom();
 /*
   Serial.print("Size of uint64_t: ");
   Serial.println(sizeof(uint64_t));
@@ -161,14 +181,38 @@ void speed_acceleration_calculator_leadscrew(){
 }
 
 void speed_acceleration_calculator_pulley(){
-  step_delay_speed_steady_x = pi*pulley_diameter_x*(10^6) / (input_speed_steady_x*motor_fullcycle_step_x*microstep_coeff_x*2);
-  step_delay_speed_steady_y = pi*pulley_diameter_y*(10^6) / (input_speed_steady_y*motor_fullcycle_step_y*microstep_coeff_y*2);
+//-------------------------------------------------------------- Bug Occures: Overflow Issue -> TODO: Seperate the calculations NUM/DENUM
+  double_t step_delay_memory_x;
+  float_t step_delay_memory_y;
+  double_t numerator;
+  double_t denumerator;
+  
+  numerator = pi * pulley_diameter_x ;
+  numerator = numerator * (10^2);
+  denumerator = input_speed_steady_x * motor_fullcycle_step_x * microstep_coeff_x * 2;
+  step_delay_memory_x = (numerator / denumerator);
+  step_delay_memory_x = step_delay_memory_x*(10^4);
+  step_delay_speed_steady_x = round(step_delay_memory_x);
+
+  Serial.print("Service Info: numerator = ");
+  Serial.println(numerator);
+  Serial.print("Service Info: denumerator = ");
+  Serial.println(denumerator);
+  Serial.print("Service Info: step_delay_memory_x = ");
+  Serial.println(step_delay_memory_x);
+  Serial.print("Service Info: step_delay_memory_y = ");
+  Serial.println(step_delay_memory_y);
+  Serial.print("Service Info: step_delay_speed_steady_x = ");
+  Serial.println(step_delay_speed_steady_x);
+  Serial.print("Service Info: step_delay_speed_steady_y = ");
+  Serial.println(step_delay_speed_steady_y);
+  
   delta_t_x = input_speed_steady_x / input_acceleration_x; // Delta time that acceleration going to be applied on x-axis
   delta_t_y = input_speed_steady_y / input_acceleration_y; // Delta time that acceleration going to be applied on y-axis
   step_delay_acceleration_avg_x = (step_delay_speed_min_x - step_delay_speed_steady_x) / 2; // Assuming acceleration is 0 and speed is constant at step_delay_speed_steady_x/2 on x-axis
   step_delay_acceleration_avg_y = (step_delay_speed_min_y - step_delay_speed_steady_y) / 2; // Assuming acceleration is 0 and speed is constant at step_delay_speed_steady_x/2 on y-axis
-  step_count_acceleration_calculated_x = delta_t_x*(10^6) / step_delay_acceleration_avg_x * 2; //Number of steps that acceleration going to be applied on x-axis (2 delay for one step)
-  step_count_acceleration_calculated_y = delta_t_y*(10^6) / step_delay_acceleration_avg_y * 2; //Number of steps that acceleration going to be applied on y-axis (2 delay for one step)
+  step_count_acceleration_calculated_x = delta_t_x*(10^6) / (step_delay_acceleration_avg_x * 2); //Number of steps that acceleration going to be applied on x-axis (2 delay for one step)
+  step_count_acceleration_calculated_y = delta_t_y*(10^6) / (step_delay_acceleration_avg_y * 2); //Number of steps that acceleration going to be applied on y-axis (2 delay for one step)
 }
 
 uint16_t degree_to_step_converter(float_t degree, uint32_t motor_full_cycle_step,uint32_t micrestep_coeff){
@@ -239,7 +283,6 @@ uint32_t step_y;
   }
 //--------------------------------------------------------------------- Send Feedback (Move Command Confirmed)
   Serial.println(">FP0001");
-  system_monitor_parameters();
 //--------------------------------------------------------------------- Driving x-axis motor
   for(int step_counter_x = 0 ; step_counter_x < step_x ; step_counter_x++){
     digitalWrite(pulse_pin_x, HIGH);
@@ -279,9 +322,10 @@ void goto_point(String package_income){ //TODO: Add destination point feature he
 void set_parameters(String package_income){ 
 
   String package_id_set_string = package_income.substring(1,3);
-  int package_id_set_int = package_id_set_string.toInt();
+  uint8_t package_id_set_int = package_id_set_string.toInt();
   String parameter_value_set_string = package_income.substring(3,9);     
   uint32_t parameter_value_set_int = parameter_value_set_string.toInt();
+  float_t parameter_memory = 0;
 
   switch (package_id_set_int){
     case 1:
@@ -295,12 +339,14 @@ void set_parameters(String package_income){
       Serial.println(">FS0002");
       break;
     case 3:
-      pulley_diameter_x = parameter_value_set_int / 10;
+      parameter_memory = parameter_value_set_int;
+      pulley_diameter_x = parameter_memory / 10;
       EEPROM.put(address_pulley_diameter_x, pulley_diameter_x);
       Serial.println(">FS0003");
       break;
     case 4:
-      pulley_diameter_y = parameter_value_set_int / 10;
+      parameter_memory = parameter_value_set_int;
+      pulley_diameter_y = parameter_memory / 10;
       EEPROM.put(address_pulley_diameter_y, pulley_diameter_y);
       Serial.println(">FS0004");
       break;    
@@ -342,10 +388,12 @@ void set_parameters(String package_income){
       break;
     case 13:
       step_delay_speed_min_x = parameter_value_set_int;
+      EEPROM.put(address_step_delay_speed_min_x, step_delay_speed_min_x);
       Serial.println(">FS0013");
       break;
     case 14:
       step_delay_speed_min_y = parameter_value_set_int;
+      EEPROM.put(address_step_delay_speed_min_y, step_delay_speed_min_y);
       Serial.println(">FS0014");
       break;
     case 15:
@@ -401,12 +449,12 @@ void set_parameters(String package_income){
       Serial.println(">FS0026");
       break;
     case 27:
-      driving_mechanism = parameter_value_set_int;
+      driving_mechanism == package_income[8];
       EEPROM.put(address_driving_mechanism, driving_mechanism);
       Serial.println(">FS0027");
       break;
     case 28:
-      driving_mechanism = parameter_value_set_int;
+      driving_mechanism = package_income[8];
       EEPROM.put(address_driving_mechanism, driving_mechanism);
       Serial.println(">FS0028");
       break;
@@ -414,22 +462,15 @@ void set_parameters(String package_income){
       Serial.println(">EP0006");
       break;
   }
-  if(driving_mechanism = 0){
+  if(driving_mechanism == '0'){
     speed_acceleration_calculator_pulley();
   }
-  else if(driving_mechanism = 1){
+  else if(driving_mechanism == '1'){
     speed_acceleration_calculator_leadscrew();
   }
   else{
     Serial.println(">EF0002");
   }
-}
-
-void get_parameters_eeprom(){
-  EEPROM.get(address_thread_distance_x, thread_distance_x);
-  EEPROM.get(address_thread_distance_y, thread_distance_y);
-  EEPROM.get(address_pulley_diameter_x, pulley_diameter_y);
-  EEPROM.get(address_pulley_diameter_y, pulley_diameter_y);
 }
 
 void command_analyser(String package_income){ 
@@ -465,22 +506,25 @@ void setup() { //TODO: Check "diriving_mechanism: 1" bug. Change the type from "
   pinMode(direction_pin_y, OUTPUT);
   pinMode(pulse_pin_x, OUTPUT);
   pinMode(pulse_pin_y, OUTPUT);
+  get_parameters_eeprom();
 //---------------------------------------------------------------------- Driving Mechanism Selection
   if(driving_mechanism == '0'){
     system_cycle_linear_distance_x = pi*pulley_diameter_x;
     system_cycle_linear_distance_y = pi*pulley_diameter_y;
     speed_acceleration_calculator_pulley();
+    Serial.println("Checkpoint 0");
   }
   else if(driving_mechanism == '1'){
     system_cycle_linear_distance_x = thread_distance_x;
     system_cycle_linear_distance_y = thread_distance_y;
     speed_acceleration_calculator_leadscrew();
+    Serial.println("Checkpoint 1");
+    
   }
   else{
     Serial.print(">EF0002");
   }
 //---------------------------------------------------------------------- System Monitor
-get_parameters_eeprom();
 system_monitor_parameters();
 }
 
