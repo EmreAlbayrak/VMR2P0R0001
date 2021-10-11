@@ -6,6 +6,7 @@
 // User defined includes
 #include <parameters.h>
 
+const char compile_date[] = __DATE__ " " __TIME__; 
 //--------------------------------------------------------------------- Motor Pin Parameters
 const int direction_pin_x = 2;
 const int direction_pin_y = 4;
@@ -16,7 +17,7 @@ String serial_package;
 //---------------------------------------------------------------------
 void system_monitor_parameters(){
   Serial.println("---------------------------------------------------------------------- System Monitor Start");
-
+/*
   Serial.print("Size of uint64_t: ");
   Serial.println(sizeof(uint64_t));
 
@@ -34,6 +35,9 @@ void system_monitor_parameters(){
 
   Serial.print("Size of float: ");
   Serial.println(sizeof(float));
+*/
+  Serial.print("Built Date: ");
+  Serial.println(compile_date);
 
   Serial.print("Thread Distance x-axis (mm): ");
   Serial.println(thread_distance_x);
@@ -466,13 +470,11 @@ void setup() { //TODO: Check "diriving_mechanism: 1" bug. Change the type from "
     system_cycle_linear_distance_x = pi*pulley_diameter_x;
     system_cycle_linear_distance_y = pi*pulley_diameter_y;
     speed_acceleration_calculator_pulley();
-    Serial.println("Checkpoint 1");
   }
   else if(driving_mechanism == '1'){
     system_cycle_linear_distance_x = thread_distance_x;
     system_cycle_linear_distance_y = thread_distance_y;
     speed_acceleration_calculator_leadscrew();
-    Serial.println("Checkpoint 2");
   }
   else{
     Serial.print(">EF0002");
