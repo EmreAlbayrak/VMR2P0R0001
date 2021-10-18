@@ -182,7 +182,6 @@ void speed_acceleration_calculator_leadscrew(){
 }
 
 void speed_acceleration_calculator_pulley(){
-//-------------------------------------------------------------- Bug Occures: Overflow Issue -> TODO: Seperate the calculations NUM/DENUM
   step_delay_speed_steady_x = round((pi*pulley_diameter_x*pow(10, 6)) / (input_speed_steady_x * motor_fullcycle_step_x * microstep_coeff_x * 2));
   step_delay_speed_steady_y = round((pi*pulley_diameter_y*pow(10, 6)) / (input_speed_steady_y * motor_fullcycle_step_y * microstep_coeff_y * 2));
 
