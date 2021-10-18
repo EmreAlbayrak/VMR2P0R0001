@@ -35,7 +35,7 @@ uint32_t step_count_acceleration_calculated_x = 0; //Memory for step_count_accel
 uint32_t step_count_acceleration_calculated_y = 0; //Memory for step_count_acceleration_y calculation
 float_t system_cycle_linear_distance_x = 0; // The varible keeps linear distance of one cycle for x-axis
 float_t system_cycle_linear_distance_y = 0; // The varible keeps linear distance of one cycle for y-axis
-float_t pi = 3.141592;
+uint32_t pi = 3.141592; //mutliplied by 10^6 for unit conversion
 
 
 uint8_t address_thread_distance_x = 0;
