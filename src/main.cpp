@@ -5,6 +5,7 @@
 
 // User defined includes
 #include <parameters.h>
+#include <math.h>
 
 const char compile_date[] = __DATE__ " " __TIME__; 
 //--------------------------------------------------------------------- Motor Pin Parameters
@@ -144,7 +145,7 @@ void system_monitor_parameters(){
   Serial.println(delta_t_y);
 
   Serial.print("Driving Mechanism (0->Pulley, 1->Lead Screw): ");
-  Serial.println(driving_mechanism);
+  Serial.println(char(driving_mechanism));
 
   Serial.println("---------------------------------------------------------------------- System Monitor End");
 
@@ -182,26 +183,9 @@ void speed_acceleration_calculator_leadscrew(){
 
 void speed_acceleration_calculator_pulley(){
 //-------------------------------------------------------------- Bug Occures: Overflow Issue -> TODO: Seperate the calculations NUM/DENUM
-  double_t step_delay_memory_x;
-  float_t step_delay_memory_y;
-  double_t numerator;
-  double_t denumerator;
-  
-  numerator = pi * pulley_diameter_x ;
-  numerator = numerator * (10^2);
-  denumerator = input_speed_steady_x * motor_fullcycle_step_x * microstep_coeff_x * 2;
-  step_delay_memory_x = (numerator / denumerator);
-  step_delay_memory_x = step_delay_memory_x*(10^4);
-  step_delay_speed_steady_x = round(step_delay_memory_x);
+  step_delay_speed_steady_x = round((pi*pulley_diameter_x*pow(10, 6)) / (input_speed_steady_x * motor_fullcycle_step_x * microstep_coeff_x * 2));
+  step_delay_speed_steady_y = round((pi*pulley_diameter_y*pow(10, 6)) / (input_speed_steady_y * motor_fullcycle_step_y * microstep_coeff_y * 2));
 
-  Serial.print("Service Info: numerator = ");
-  Serial.println(numerator);
-  Serial.print("Service Info: denumerator = ");
-  Serial.println(denumerator);
-  Serial.print("Service Info: step_delay_memory_x = ");
-  Serial.println(step_delay_memory_x);
-  Serial.print("Service Info: step_delay_memory_y = ");
-  Serial.println(step_delay_memory_y);
   Serial.print("Service Info: step_delay_speed_steady_x = ");
   Serial.println(step_delay_speed_steady_x);
   Serial.print("Service Info: step_delay_speed_steady_y = ");
@@ -211,8 +195,14 @@ void speed_acceleration_calculator_pulley(){
   delta_t_y = input_speed_steady_y / input_acceleration_y; // Delta time that acceleration going to be applied on y-axis
   step_delay_acceleration_avg_x = (step_delay_speed_min_x - step_delay_speed_steady_x) / 2; // Assuming acceleration is 0 and speed is constant at step_delay_speed_steady_x/2 on x-axis
   step_delay_acceleration_avg_y = (step_delay_speed_min_y - step_delay_speed_steady_y) / 2; // Assuming acceleration is 0 and speed is constant at step_delay_speed_steady_x/2 on y-axis
-  step_count_acceleration_calculated_x = delta_t_x*(10^6) / (step_delay_acceleration_avg_x * 2); //Number of steps that acceleration going to be applied on x-axis (2 delay for one step)
-  step_count_acceleration_calculated_y = delta_t_y*(10^6) / (step_delay_acceleration_avg_y * 2); //Number of steps that acceleration going to be applied on y-axis (2 delay for one step)
+  step_count_acceleration_calculated_x = round((delta_t_x * pow(10, 6)) / (step_delay_acceleration_avg_x * 2)); //Number of steps that acceleration going to be apply on x-axis (2 delay for one step)
+  step_count_acceleration_calculated_y = round((delta_t_y * pow(10, 6)) / (step_delay_acceleration_avg_y * 2)); //Number of steps that acceleration going to be apply on y-axis (2 delay for one step)
+
+  Serial.print("Service Info: step_count_acceleration_calculated_x = ");
+  Serial.println(step_count_acceleration_calculated_x);
+  Serial.print("Service Info: step_count_acceleration_calculated_y = ");
+  Serial.println(step_count_acceleration_calculated_y);
+
 }
 
 uint16_t degree_to_step_converter(float_t degree, uint32_t motor_full_cycle_step,uint32_t micrestep_coeff){
@@ -499,7 +489,7 @@ void command_analyser(String package_income){
   }
 }
 
-void setup() { //TODO: Check "diriving_mechanism: 1" bug. Change the type from "int" to "char" and try again. 
+void setup() { 
   Serial.begin(9600);
 //---------------------------------------------------------------------- Motor Pin Definitions
   pinMode(direction_pin_x, OUTPUT);
