@@ -9,10 +9,15 @@
 
 const char compile_date[] = __DATE__ " " __TIME__; 
 //--------------------------------------------------------------------- Motor Pin Parameters
-const int direction_pin_x = 2;
-const int direction_pin_y = 4;
-const int pulse_pin_x = 3;
-const int pulse_pin_y = 5;
+const int direction_pin_x_1 = 2;
+const int direction_pin_x_2 = 4;
+const int direction_pin_y = 7;
+const int pulse_pin_x_1 = 3;
+const int pulse_pin_x_2 = 5;
+const int pulse_pin_y = 6;
+const int enable_pin_x_1 = 8;
+const int enable_pin_x_2 = 9;
+const int enable_pin_y = 10;
 //--------------------------------------------------------------------- Serial Communication Parameters
 String serial_package;
 //---------------------------------------------------------------------
@@ -171,14 +176,14 @@ float_t parse_distance(String package_income,char axis){
 }
 
 void speed_acceleration_calculator_leadscrew(){
-  step_delay_speed_steady_x = thread_distance_x*(10^6) / (input_speed_steady_x*motor_fullcycle_step_x*microstep_coeff_x*2);
-  step_delay_speed_steady_y = thread_distance_y*(10^6) / (input_speed_steady_y*motor_fullcycle_step_y*microstep_coeff_y*2);
+  step_delay_speed_steady_x = thread_distance_x*pow(10, 6) / (input_speed_steady_x*motor_fullcycle_step_x*microstep_coeff_x*2);
+  step_delay_speed_steady_y = thread_distance_y*pow(10, 6) / (input_speed_steady_y*motor_fullcycle_step_y*microstep_coeff_y*2);
   delta_t_x = input_speed_steady_x / input_acceleration_x; // Delta time that acceleration going to be applied on x-axis
   delta_t_y = input_speed_steady_y / input_acceleration_y; // Delta time that acceleration going to be applied on y-axis
   step_delay_acceleration_avg_x = (step_delay_speed_min_x - step_delay_speed_steady_x) / 2; // Assuming acceleration is 0 and speed is constant at step_delay_speed_steady_x/2 on x-axis
   step_delay_acceleration_avg_y = (step_delay_speed_min_y - step_delay_speed_steady_y) / 2; // Assuming acceleration is 0 and speed is constant at step_delay_speed_steady_x/2 on y-axis
-  step_count_acceleration_calculated_x = delta_t_x*(10^6) / (step_delay_acceleration_avg_x * 2); //Number of steps that acceleration going to be applied on x-axis (2 delay for one step)
-  step_count_acceleration_calculated_y = delta_t_y*(10^6) / (step_delay_acceleration_avg_y * 2); //Number of steps that acceleration going to be applied on y-axis (2 delay for one step)
+  step_count_acceleration_calculated_x = delta_t_x*pow(10, 6) / (step_delay_acceleration_avg_x * 2); //Number of steps that acceleration going to be applied on x-axis (2 delay for one step)
+  step_count_acceleration_calculated_y = delta_t_y*pow(10, 6) / (step_delay_acceleration_avg_y * 2); //Number of steps that acceleration going to be applied on y-axis (2 delay for one step)
 }
 
 void speed_acceleration_calculator_pulley(){
@@ -192,8 +197,8 @@ void speed_acceleration_calculator_pulley(){
   
   delta_t_x = input_speed_steady_x / input_acceleration_x; // Delta time that acceleration going to be applied on x-axis
   delta_t_y = input_speed_steady_y / input_acceleration_y; // Delta time that acceleration going to be applied on y-axis
-  step_delay_acceleration_avg_x = (step_delay_speed_min_x - step_delay_speed_steady_x) / 2; // Assuming acceleration is 0 and speed is constant at step_delay_speed_steady_x/2 on x-axis
-  step_delay_acceleration_avg_y = (step_delay_speed_min_y - step_delay_speed_steady_y) / 2; // Assuming acceleration is 0 and speed is constant at step_delay_speed_steady_x/2 on y-axis
+  step_delay_acceleration_avg_x = ((step_delay_speed_min_x / microstep_coeff_x) - step_delay_speed_steady_x) / 2; // Assuming acceleration is 0 and speed is constant at step_delay_speed_steady_x/2 on x-axis
+  step_delay_acceleration_avg_y = ((step_delay_speed_min_y / microstep_coeff_y) - step_delay_speed_steady_y) / 2; // Assuming acceleration is 0 and speed is constant at step_delay_speed_steady_x/2 on y-axis
   step_count_acceleration_calculated_x = round((delta_t_x * pow(10, 6)) / (step_delay_acceleration_avg_x * 2)); //Number of steps that acceleration going to be apply on x-axis (2 delay for one step)
   step_count_acceleration_calculated_y = round((delta_t_y * pow(10, 6)) / (step_delay_acceleration_avg_y * 2)); //Number of steps that acceleration going to be apply on y-axis (2 delay for one step)
 
@@ -220,10 +225,12 @@ uint32_t step_x;
 uint32_t step_y;
 //--------------------------------------------------------------------- Motor Direction of Rotation
   if(package_income[2] == 'P'){
-    digitalWrite(direction_pin_x, HIGH);
+    digitalWrite(direction_pin_x_1, HIGH);
+    digitalWrite(direction_pin_x_2, LOW);
   }
   else if(package_income[2] == 'N'){
-    digitalWrite(direction_pin_x, LOW);
+    digitalWrite(direction_pin_x_1, LOW);
+    digitalWrite(direction_pin_x_2, HIGH);
   }
   else {
     Serial.println(">EP0003");
@@ -272,12 +279,24 @@ uint32_t step_y;
   }
 //--------------------------------------------------------------------- Send Feedback (Move Command Confirmed)
   Serial.println(">FP0001");
+  Serial.print("System Info: step_x = ");
+  Serial.println(step_x);
+  Serial.print("System Info: step_y = ");
+  Serial.println(step_y);
+
 //--------------------------------------------------------------------- Driving x-axis motor
+
+  digitalWrite(enable_pin_x_1, LOW); //Let the motor power on
+  digitalWrite(enable_pin_x_2, LOW); //Let the motor power on
+  delay(100);
+
   for(int step_counter_x = 0 ; step_counter_x < step_x ; step_counter_x++){
-    digitalWrite(pulse_pin_x, HIGH);
+    digitalWrite(pulse_pin_x_1, HIGH);
+    digitalWrite(pulse_pin_x_2, HIGH);
     delayMicroseconds(step_delay_instantaneous_x);
-    digitalWrite(pulse_pin_x, LOW);
-    delayMicroseconds(step_delay_instantaneous_y);
+    digitalWrite(pulse_pin_x_1, LOW);
+    digitalWrite(pulse_pin_x_2, LOW);
+    delayMicroseconds(step_delay_instantaneous_x);
 //---------------------------------------------------------------------- Applying acceleration for x-axis
     if(step_counter_x < step_count_acceleration_x){
       step_delay_instantaneous_x = map(step_counter_x, 0, step_count_acceleration_calculated_x, step_delay_speed_min_x, step_delay_speed_steady_x);
@@ -285,8 +304,21 @@ uint32_t step_y;
     else if(step_counter_x > step_x - step_count_acceleration_x){
       step_delay_instantaneous_x = map(step_counter_x, step_x - step_count_acceleration_calculated_x, step_x, step_delay_speed_steady_x, step_delay_speed_min_x);
     }
+
+    /*
+    Serial.print("System Info: Step Number: ");
+    Serial.println(step_counter_x);
+    */
   }
+
+  digitalWrite(enable_pin_x_1, HIGH); //Let the motor x_1 power off
+  digitalWrite(enable_pin_x_2, HIGH); //Let the motor x_2 power off
+
 //--------------------------------------------------------------------- Driving y-axis motor
+
+  digitalWrite(enable_pin_y, LOW); //Let the motor y power on
+  delay(100);
+
   for(int step_counter_y = 0; step_counter_y < step_count_acceleration_y; step_counter_y++){
     digitalWrite(pulse_pin_y, HIGH);
     delayMicroseconds(step_delay_instantaneous_y);
@@ -300,6 +332,9 @@ uint32_t step_y;
       step_delay_instantaneous_y = map(step_counter_y, step_y - step_count_acceleration_calculated_y, step_y, step_delay_speed_steady_y, step_delay_speed_min_y);
     }
   }
+
+  digitalWrite(enable_pin_y, HIGH); //Let the motor y power off
+
 //---------------------------------------------------------------------- Send Feedback (Action Accomplished)
   Serial.println(">FA0001"); 
 }
@@ -488,13 +523,21 @@ void command_analyser(String package_income){
   }
 }
 
-void setup() { 
+void setup() {
   Serial.begin(9600);
 //---------------------------------------------------------------------- Motor Pin Definitions
-  pinMode(direction_pin_x, OUTPUT);
+  pinMode(direction_pin_x_1, OUTPUT);
+  pinMode(direction_pin_x_2, OUTPUT);
   pinMode(direction_pin_y, OUTPUT);
-  pinMode(pulse_pin_x, OUTPUT);
+  pinMode(pulse_pin_x_1, OUTPUT);
+  pinMode(pulse_pin_x_2, OUTPUT);
   pinMode(pulse_pin_y, OUTPUT);
+  pinMode(enable_pin_x_1, OUTPUT);
+  pinMode(enable_pin_x_2, OUTPUT);
+  pinMode(enable_pin_y, OUTPUT);
+  digitalWrite(enable_pin_x_1, HIGH);
+  digitalWrite(enable_pin_x_2, HIGH);
+  digitalWrite(enable_pin_y, HIGH);
   get_parameters_eeprom();
 //---------------------------------------------------------------------- Driving Mechanism Selection
   if(driving_mechanism == '0'){
