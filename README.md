@@ -8,7 +8,10 @@
 
 The system communicates over UART protocol, 9600 baud rate, 8-bit, no handshake.
 
-The current verion tested on STM32F303RE Nucleo Board With built-in ST-Link V2 UART Converter.
+The current verion tested on ST Nucleo STM32F303RE Board With on-board ST-Link V2 UART Converter.
+Driver requred to communicate over on-board ST-Link V2 UART converter.
+
+Driver could be found at: *https://www.st.com/en/development-tools/stsw-link009.html*
 
 ### 1. Set Commands:
 
@@ -85,7 +88,7 @@ Element number eight to eleven are delta motion on y-axis in units of millimeter
 
 Every feedback package starts with ">" character as an indicator. Computer software should just tooks the feedback packages starting with ">" character (FeedbackString[0]). MCU sends different kind of informations as a feedback (calculation results, status information etc.) for service monitoring. Computer software should only took the packages starting with ">" to avoid problems.
 
-- #### Error Package structure and IDs:
+- #### Error Package Structure and IDs:
   #### Example Package: EPXXXX
 
 	Where the zeroth element of the array (array[0]) is command type ("E" for errors).
@@ -110,7 +113,7 @@ Every feedback package starts with ">" character as an indicator. Computer softw
 	| EF0002 | Invalid Driving Mechanism |
 	| EF0003 | Invalid Axis Input Function |
 
-- #### Feedback ID and structure:
+- #### Feedback Package Structure and IDs:
   #### Example Package: FSXXXX
 
 	Where the zeroth element of the array (array[0]) is  the return type ("F" for feedback).
@@ -196,6 +199,10 @@ The required hardware connections had been given in the table below.
 | CWD556 Motor Driver (x-axis 2) | PUL+ | D5 (PB4) |
 | CWD556 Motor Driver (x-axis 2) | ENA+ | D9 (PA9) |
 | CWD556 Motor Driver (x-axis 2) | DIR- PUL- ENA- | GND |
+| CWD556 Motor Driver (y-axis) | DIR+ | D7 (PA8) |
+| CWD556 Motor Driver (y-axis) | PUL+ | D6 (PB10) |
+| CWD556 Motor Driver (y-axis) | ENA+ | D10 (PB6) |
+| CWD556 Motor Driver (y-axis) | DIR- PUL- ENA- | GND |
 
 ***List of pin connection between motors and motor drivers:***
 
@@ -210,7 +217,7 @@ The required hardware connections had been given in the table below.
 | BROWN | SC to ORANGE | NC | NC |
 | GREEN | GREEN | 4 | B- |
 
-*NC: Not Connected*
-*SC: Short Circuit*
+*NC: Not Connected* 
+*SC: Short Circuit* 
 
-***Note:** All the connetions between motors and motor drivers are same in the device (x-axis 1, x-axis 2 and y-axis). Motor drivers runs at 24V and requires at least 4 ampers power supply per driver*
+***Note:** All the connetions between motors and motor drivers are same in the device (x-axis 1, x-axis 2 and y-axis). In the current version of the product, motor drivers runs at 24V and requires at least 4 ampers power supply per driver*
