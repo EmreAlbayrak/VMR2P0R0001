@@ -86,13 +86,13 @@ Element number eight to eleven are delta motion on y-axis in units of millimeter
 Every feedback package starts with ">" character as an indicator. Computer software should just tooks the feedback packages starting with ">" character (FeedbackString[0]). MCU sends different kind of informations as a feedback (calculation results, status information etc.) for service monitoring. Computer software should only took the packages starting with ">" to avoid problems.
 
 - #### Error Package structure and IDs:
-	#### Example Package: EPXXXX
+  #### Example Package: EPXXXX
 
 	Where the zeroth element of the array (array[0]) is command type ("E" for errors).
 
 	The first element of the array (array[1]) is the return type (P for package, F for functions).
 
-	*Package Errors:*
+	*List of Package Errors:*
 
 	| Package | Description |
 	| ------- | ----------- |
