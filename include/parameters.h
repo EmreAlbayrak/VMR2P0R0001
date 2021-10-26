@@ -4,6 +4,7 @@
 #include <Arduino.h>
 
 //--------------------------------------------------------------------- Motor Control Parameters
+
 uint16_t thread_distance_x = 10; // In units of millimeter
 uint16_t thread_distance_y = 10; // In units of millimeter
 float_t pulley_diameter_x = 38.2; //In units of millimeter
@@ -37,6 +38,19 @@ float_t system_cycle_linear_distance_x = 0; // The varible keeps linear distance
 float_t system_cycle_linear_distance_y = 0; // The varible keeps linear distance of one cycle for y-axis
 uint32_t pi = 3.141592; //mutliplied by 10^6 for unit conversion
 
+//--------------------------------------------------------------------- Motor Pin Parameters
+
+const uint8_t direction_pin_x_1 = 2;
+const uint8_t direction_pin_x_2 = 4;
+const uint8_t direction_pin_y = 7;
+const uint8_t pulse_pin_x_1 = 3;
+const uint8_t pulse_pin_x_2 = 5;
+const uint8_t pulse_pin_y = 6;
+const uint8_t enable_pin_x_1 = 8;
+const uint8_t enable_pin_x_2 = 9;
+const uint8_t enable_pin_y = 10;
+
+//--------------------------------------------------------------------- EEPROM Addresses
 
 uint8_t address_thread_distance_x = 0;
 uint8_t address_thread_distance_y = 2;
@@ -53,6 +67,5 @@ uint8_t address_input_acceleration_y = 23;
 uint8_t address_driving_mechanism = 24;
 uint8_t address_step_delay_speed_min_x = 26;
 uint8_t address_step_delay_speed_min_y = 30;
-
 
 #endif PARAMETERS_H
