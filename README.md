@@ -181,3 +181,36 @@ Some parameters are available to set from user, and those parameters requires to
 | step_delay_speed_min_y | uint32_t | 30 |
 
 ## Hardware Connections 
+
+The required hardware connections had been given in the table below.
+
+***List of pin connections between ST Nucleo STM32F303RE board and external devices:***
+
+| External Device Name | External Device Pin Name | STM32F303RE Nucleo Pin Number |
+| -------------------- | ------------------------ | ----------------------------- |
+| CWD556 Motor Driver (x-axis 1) | DIR+ | D2 (PA10) |
+| CWD556 Motor Driver (x-axis 1) | PUL+ | D3 (PB3) |
+| CWD556 Motor Driver (x-axis 1) | ENA+ | D8 (PA9) |
+| CWD556 Motor Driver (x-axis 1) | DIR- PUL- ENA- | GND |
+| CWD556 Motor Driver (x-axis 2) | DIR+ | D4 (PB5) |
+| CWD556 Motor Driver (x-axis 2) | PUL+ | D5 (PB4) |
+| CWD556 Motor Driver (x-axis 2) | ENA+ | D9 (PA9) |
+| CWD556 Motor Driver (x-axis 2) | DIR- PUL- ENA- | GND |
+
+***List of pin connection between motors and motor drivers:***
+
+| Motor's Original Cable Colour | Color of Extention Cable | GX16 Socket Pin Number | Motor Driver Pin Name |
+| ----------------------------- | ------------------------ | ---------------------- | --------------------- |
+| RED | BROWN | 1 | A+ |
+| YELLOW | SC to BLUE | NC | NC |
+| BLUE | SC to YELLOW | NC | NC |
+| BLACK | YELLOW | 3 | A- |
+| WHITE | WHITE | 2 | B+ |
+| ORANGE | SC to BROWN | NC | NC |
+| BROWN | SC to ORANGE | NC | NC |
+| GREEN | GREEN | 4 | B- |
+
+*NC: Not Connected*
+*SC: Short Circuit*
+
+***Note:** All the connetions between motors and motor drivers are same in the device (x-axis 1, x-axis 2 and y-axis). Motor drivers runs at 24V and requires at least 4 ampers power supply per driver*
