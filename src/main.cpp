@@ -8,16 +8,7 @@
 #include <math.h>
 
 const char compile_date[] = __DATE__ " " __TIME__; 
-//--------------------------------------------------------------------- Motor Pin Parameters
-const int direction_pin_x_1 = 2;
-const int direction_pin_x_2 = 4;
-const int direction_pin_y = 7;
-const int pulse_pin_x_1 = 3;
-const int pulse_pin_x_2 = 5;
-const int pulse_pin_y = 6;
-const int enable_pin_x_1 = 8;
-const int enable_pin_x_2 = 9;
-const int enable_pin_y = 10;
+
 //--------------------------------------------------------------------- Serial Communication Parameters
 String serial_package;
 //---------------------------------------------------------------------
