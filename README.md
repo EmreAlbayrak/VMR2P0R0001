@@ -73,7 +73,7 @@ Element number eight to eleven are delta motion on y-axis in units of millimeter
 
 ####*Example Move Command:*
 
-**MLP0382N0382** -> *382mm positive direction on x-axis, 482mm negative direction on y-axis.*
+**MLP0382N0382** -> *382mm positive direction on x-axis, 382mm negative direction on y-axis.*
 
 **MRP0360N0360** -> *360 degrees clockwise on x-axis, 360 degrees counter clockwise on y-axis.*
 
