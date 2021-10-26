@@ -160,12 +160,12 @@ float_t parse_distance(String package_income,char axis){
   String delta_string;
   float_t delta_float = 0;
   if(axis == 'x'){
-    delta_string = package_income.substring(3,10);
+    delta_string = package_income.substring(3,7);
     delta_float = delta_string.toFloat();
     return delta_float / 1000; // Unit convertion of micrometers to millimeters 
   }
   else if(axis == 'y'){
-    delta_string = package_income.substring(11,18);
+    delta_string = package_income.substring(8,12);
     delta_float = delta_string.toFloat();
     return delta_float / 1000; // Unit convertion of micrometers to millimeters
   }
@@ -235,10 +235,10 @@ uint32_t step_y;
   else {
     Serial.println(">EP0003");
   }
-  if(package_income[10] == 'P'){
+  if(package_income[7] == 'P'){
     digitalWrite(direction_pin_y, HIGH);
   }
-  else if(package_income[10] == 'N'){
+  else if(package_income[7] == 'N'){
     digitalWrite(direction_pin_y, LOW);
   }
   else {
@@ -255,14 +255,14 @@ uint32_t step_y;
       step_y = degree_to_step_converter(degree_y, motor_fullcycle_step_y, microstep_coeff_y);
   }
   else if(package_income[1] == 'R'){
-    degree_x = package_income.substring(3,10).toFloat();
-    degree_y = package_income.substring(11,18).toFloat();
+    degree_x = package_income.substring(3,7).toFloat();
+    degree_y = package_income.substring(8,12).toFloat();
     step_x = degree_to_step_converter(degree_x, motor_fullcycle_step_x, microstep_coeff_x);
     step_y = degree_to_step_converter(degree_y, motor_fullcycle_step_y, microstep_coeff_y);
   }
   else if(package_income[1] == 'S'){
-    step_x = package_income.substring(3,10).toInt();
-    step_y = package_income.substring(11,18).toInt();
+    step_x = package_income.substring(3,7).toInt();
+    step_y = package_income.substring(8,12).toInt();
   }
 //--------------------------------------------------------------------- Easter Egg
   if(step_x / 2 > step_count_acceleration_calculated_x){
@@ -503,7 +503,7 @@ void command_analyser(String package_income){
   Serial.print("Package Length: ");
   Serial.println(package_income_length);
 */
-  if(package_income_length = 18){
+  if(package_income_length = 12){
     if(package_income[0] == 'M'){
       move_motors(package_income);
     }
