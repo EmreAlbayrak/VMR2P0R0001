@@ -58,7 +58,7 @@ Following nine digits are null bits to match the package size expected from robo
 
 ### 2. Move Commands 
 #### Command ID and structure:
-#### Example Package: MXX#######X#######
+#### Example Package: MXX####X####
 
 Fix package size: 12 element string
 
@@ -99,19 +99,19 @@ Every feedback package starts with ">" character as an indicator. Computer softw
 
 	| Package | Description |
 	| ------- | ----------- |
-	| EP0001 | Package size mismatch |
-	| EP0002 | Invalid command type (array[0] error) |
-	| EP0003 | Invalid motion type (array[1] error) |
-	| EP0004 | Invalid direction of rotation for x-axis (array[2]) |
-	| EP0005 | Invalid direction of rotation for y-axis (array[10]) |
-	| EP0006 | Invalid set parameter ID (array[1], array[2]) |
+	| >EP0001 | Package size mismatch |
+	| >EP0002 | Invalid command type (array[0] error) |
+	| >EP0003 | Invalid motion type (array[1] error) |
+	| >EP0004 | Invalid direction of rotation for x-axis (array[2]) |
+	| >EP0005 | Invalid direction of rotation for y-axis (array[10]) |
+	| >EP0006 | Invalid set parameter ID (array[1], array[2]) |
 
 	*List of Funtion Errors:*
 	| Package | Description |
 	| ------- | ----------- |
-	| EF0001 | "Parse Distance" Function error |
-	| EF0002 | Invalid Driving Mechanism |
-	| EF0003 | Invalid Axis Input Function |
+	| >EF0001 | "Parse Distance" Function error |
+	| >EF0002 | Invalid Driving Mechanism |
+	| >EF0003 | Invalid Axis Input Function |
 
 - #### Feedback Package Structure and IDs:
   #### Example Package: FSXXXX
@@ -126,38 +126,38 @@ Every feedback package starts with ">" character as an indicator. Computer softw
 
 	| Package | Description |
 	| ------- | ----------- |
-	| FS0001 | threat_distance_x set done. |
-	| FS0002 | threat_distance_y set done. |
-	| FS0003 | pulley_diameter_x set done. |
-	| FS0004 | pulley_diameter_y set done. |
-	| FS0005 | motor_fullcycle_step_x set done. |
-	| FS0006 | motor_fullcycle_step_y set done. |
-	| FS0007 | microstep_coeff_x set done. |
-	| FS0008 | microstep_coeff_y set done. |
-	| FS0009 | max_speed_x set done. |
-	| FS0010 | max_speed_y set done. |
-	| FS0011 | step_delay_speed_steady_x set done. |
-	| FS0012 | step_delay_speed_steady_y set done. |
-	| FS0013 | step_delay_speed_min_x set done. |
-	| FS0014 | step_delay_speed_min_y set done. |
-	| FS0015 | step_delay_instantaneous_x set done. |
-	| FS0016 | step_delay_instantaneous_y set done. |
-	| FS0017 | step_delay_acceleration_avg_x set done. |
-	| FS0018 | step_delay_acceleration_avg_y set done. |
-	| FS0019 | step_count_acceleration_x set done. |
-	| FS0020 | step_count_acceleration_y set done. |
-	| FS0021 | input_speed_steady_x set done. |
-	| FS0022 | input_speed_steady_y set done. |
-	| FS0023 | input_acceleration_x set done. |
-	| FS0024 | input_acceleration_y set done. |
-	| FS0025 | delta_t_x set done. |
-	| FS0026 | delta_t_y set done. |
-	| FS0027 | driving_mechanism_x set done. |
-	| FS0028 | driving_mechanism_y set done. |
+	| >FS0001 | threat_distance_x set done. |
+	| >FS0002 | threat_distance_y set done. |
+	| >FS0003 | pulley_diameter_x set done. |
+	| >FS0004 | pulley_diameter_y set done. |
+	| >FS0005 | motor_fullcycle_step_x set done. |
+	| >FS0006 | motor_fullcycle_step_y set done. |
+	| >FS0007 | microstep_coeff_x set done. |
+	| >FS0008 | microstep_coeff_y set done. |
+	| >FS0009 | max_speed_x set done. |
+	| >FS0010 | max_speed_y set done. |
+	| >FS0011 | step_delay_speed_steady_x set done. |
+	| >FS0012 | step_delay_speed_steady_y set done. |
+	| >FS0013 | step_delay_speed_min_x set done. |
+	| >FS0014 | step_delay_speed_min_y set done. |
+	| >FS0015 | step_delay_instantaneous_x set done. |
+	| >FS0016 | step_delay_instantaneous_y set done. |
+	| >FS0017 | step_delay_acceleration_avg_x set done. |
+	| >FS0018 | step_delay_acceleration_avg_y set done. |
+	| >FS0019 | step_count_acceleration_x set done. |
+	| >FS0020 | step_count_acceleration_y set done. |
+	| >FS0021 | input_speed_steady_x set done. |
+	| >FS0022 | input_speed_steady_y set done. |
+	| >FS0023 | input_acceleration_x set done. |
+	| >FS0024 | input_acceleration_y set done. |
+	| >FS0025 | delta_t_x set done. |
+	| >FS0026 | delta_t_y set done. |
+	| >FS0027 | driving_mechanism_x set done. |
+	| >FS0028 | driving_mechanism_y set done. |
 	| | |
-	| FP0001 | Move Package Confirmed |
+	| >FP0001 | Move Package Confirmed |
 	| | |
-	| FA0001 | Action Accomplished |
+	| >FA0001 | Action Accomplished |
 
 ## EEPROM Adress List of Parameters
 
@@ -220,4 +220,4 @@ The required hardware connections had been given in the table below.
 *NC: Not Connected* 
 *SC: Short Circuit* 
 
-***Note:** All the connetions between motors and motor drivers are same in the device (x-axis 1, x-axis 2 and y-axis). In the current version of the product, motor drivers runs at 24V and requires at least 4 ampers power supply per driver*
+***Note:** All the connetions between motors and motor drivers are same in the device (x-axis 1, x-axis 2 and y-axis). In the current version of the product, motor drivers runs at 24V and requires at least 4 ampers power supply per driver.*
