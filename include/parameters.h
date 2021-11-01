@@ -37,6 +37,10 @@ uint32_t step_count_acceleration_calculated_y = 0; //Memory for step_count_accel
 float_t system_cycle_linear_distance_x = 0; // The varible keeps linear distance of one cycle for x-axis
 float_t system_cycle_linear_distance_y = 0; // The varible keeps linear distance of one cycle for y-axis
 uint32_t pi = 3.141592; //mutliplied by 10^6 for unit conversion
+float_t degree_x;
+float_t degree_y;
+uint32_t step_x;
+uint32_t step_y;
 
 //--------------------------------------------------------------------- Motor Pin Parameters
 
@@ -49,6 +53,11 @@ const uint8_t pulse_pin_y = 6;
 const uint8_t enable_pin_x_1 = 8;
 const uint8_t enable_pin_x_2 = 9;
 const uint8_t enable_pin_y = 10;
+
+//--------------------------------------------------------------------- Limit Swtich Pin Parameters
+
+const uint8_t limit_switch_pin_x = 11;
+const uint8_t limit_switch_pin_y = 12; 
 
 //--------------------------------------------------------------------- EEPROM Addresses
 
