@@ -84,7 +84,14 @@ Element number eight to eleven are delta motion on y-axis in units of millimeter
 
 ***Note:** "P" Positive direction of motion means clockwise (CW), "N" Negative direction of motion means counter clockwise (CCW) on rotational inputs.*
 
-### 3. Feedback Packages
+### 3. "Go To Destination" Command
+
+In the current version, system goes to home position if it receives "D" command as a zeroth element of the array (array[0]). To fill the package to make it suitable for expacted array size (where it is 12 digits), the package should contains null characters.
+
+#####*Example:* 
+GNNNNNNNNNNN
+
+### 4. Feedback Packages
 
 Every feedback package starts with ">" character as an indicator. Computer software should just tooks the feedback packages starting with ">" character (FeedbackString[0]). MCU sends different kind of informations as a feedback (calculation results, status information etc.) for service monitoring. Computer software should only took the packages starting with ">" to avoid problems.
 
