@@ -153,16 +153,15 @@ float_t parse_distance(String package_income,char axis){
   if(axis == 'x'){
     delta_string = package_income.substring(3,7);
     delta_float = delta_string.toFloat();
-    return delta_float / 1000; // Unit convertion of micrometers to millimeters 
+    return delta_float; // Unit convertion of micrometers to millimeters 
   }
   else if(axis == 'y'){
     delta_string = package_income.substring(8,12);
     delta_float = delta_string.toFloat();
-    return delta_float / 1000; // Unit convertion of micrometers to millimeters
+    return delta_float; // Unit convertion of micrometers to millimeters
   }
   else{
     Serial.println(">EF0003");
-    return 0;
   }
 }
 
@@ -200,11 +199,11 @@ void speed_acceleration_calculator_pulley(){
 
 }
 
-uint16_t degree_to_step_converter(float_t degree, uint32_t motor_full_cycle_step,uint32_t micrestep_coeff){
-  return (degree * motor_full_cycle_step * micrestep_coeff / 360);
+uint16_t degree_to_step_converter(float_t degree, float_t motor_full_cycle_step, float_t micrestep_coeff){
+  return round(degree * motor_full_cycle_step * micrestep_coeff / 360);
 }
 
-float_t linear_to_rotational_converter(float_t distance, uint32_t system_cycle_linear_distance){
+float_t linear_to_rotational_converter(float_t distance, float_t system_cycle_linear_distance){
   return ((distance / system_cycle_linear_distance) * 360);
 }
 
@@ -235,7 +234,7 @@ void set_direction_y(char direction){
 }
 
 void move_type_selector_step_calculator(String package_income){
-  if(package_income[1] == 'L'){
+  if(package_income[1] == 'L'){ // Input unit: Millimeters
     //--------------------------------------------------------------------- Parse distance from package
       float_t distance_x = parse_distance(package_income,'x');
       float_t distance_y = parse_distance(package_income,'y');
@@ -245,13 +244,13 @@ void move_type_selector_step_calculator(String package_income){
       step_x = degree_to_step_converter(degree_x, motor_fullcycle_step_x, microstep_coeff_x);
       step_y = degree_to_step_converter(degree_y, motor_fullcycle_step_y, microstep_coeff_y);
   }
-  else if(package_income[1] == 'R'){
+  else if(package_income[1] == 'R'){ // Input Unit: Degrees
     degree_x = package_income.substring(3,7).toFloat();
     degree_y = package_income.substring(8,12).toFloat();
     step_x = degree_to_step_converter(degree_x, motor_fullcycle_step_x, microstep_coeff_x);
     step_y = degree_to_step_converter(degree_y, motor_fullcycle_step_y, microstep_coeff_y);
   }
-  else if(package_income[1] == 'S'){
+  else if(package_income[1] == 'S'){ // Input Unit: Steps
     step_x = package_income.substring(3,7).toInt();
     step_y = package_income.substring(8,12).toInt();
   }
@@ -338,26 +337,71 @@ void move_motors(String package_income){
   Serial.println(">FA0001"); 
 }
 
-void goto_home_x_axis(){ // TODO: Add home point allignment 
+void destination_home_x_axis(){ // TODO: Add home point allignment x-axis
   //Add direction of rotation
   //Add for loop for counting unlimited
   //Break the code when limit swtich signal rised "HIGH"
-  bool limit_switch_flag;
+  Serial.println(">FP0002");
+  bool limit_switch_flag_x = true;
+  bool toggle = true;
+  unsigned long time_1 = 0;
   set_direction_x('N');
-  while(limit_switch_flag = false){
+  digitalWrite(enable_pin_x_1, LOW);
+  digitalWrite(enable_pin_x_2, LOW);
+  while(limit_switch_flag_x){
+    if(digitalRead(limit_switch_pin_x) == HIGH){
+      if(toggle == true){
+        time_1 = millis();
+        toggle = false;
+      }
+      if(millis() - time_1 >= 1){
+        Serial.println(">FA0001");
+        limit_switch_flag_x = false;
+      }
+    }
+    else{
+      toggle = true;
+    }
+    // Serial.println("*");
     digitalWrite(pulse_pin_x_1,HIGH);
     digitalWrite(pulse_pin_x_2, HIGH);
     delayMicroseconds(step_delay_speed_steady_x);
     digitalWrite(pulse_pin_x_1, LOW);
     digitalWrite(pulse_pin_x_2, LOW);
-    delayMicroseconds(step_delay_speed_steady_x); 
-    if(digitalRead(limit_switch_pin_x) == HIGH){
-      limit_switch_flag = true;
+    delayMicroseconds(step_delay_speed_steady_x);
+  }
+  digitalWrite(enable_pin_x_1, HIGH);
+  digitalWrite(enable_pin_x_2, HIGH);
+}
+
+void destination_home_y_axis(){ //TODO: Add home point allignmetn y-axis
+  Serial.println(">FP0002");
+  bool limit_switch_flag_y;
+  bool toggle = true;
+  unsigned long time_1 = 0;
+  set_direction_y('N');
+  while(limit_switch_flag_y = false){
+    if(digitalRead(limit_switch_pin_y) == HIGH){ //Switch debounce for spikes
+      if(toggle == true){
+        time_1 = millis();
+        toggle = false;
+      }
+      if(millis() - time_1 >= 1){
+        Serial.println(">FA0001");
+        limit_switch_flag_y = false;
+      }
     }
+    else{
+      toggle = true;
+    }
+    digitalWrite(pulse_pin_y,HIGH);
+    delayMicroseconds(step_delay_speed_steady_y);
+    digitalWrite(pulse_pin_y, LOW);
+    delayMicroseconds(step_delay_speed_steady_y); 
   }
 }
 
-void goto_point(String package_income){ //TODO: Add destination point feature
+void destination_point(String package_income){ //TODO: Add destination point feature
 
 }
 
@@ -533,7 +577,7 @@ void command_analyser(String package_income){
       system_monitor_parameters();
     }
     else if(package_income[0] == 'D'){
-      goto_home_x_axis();
+      destination_home_x_axis();
     }
     else{
       Serial.println(">EP0002");
@@ -556,6 +600,8 @@ void setup() {
   pinMode(enable_pin_x_1, OUTPUT);
   pinMode(enable_pin_x_2, OUTPUT);
   pinMode(enable_pin_y, OUTPUT);
+  pinMode(limit_switch_pin_x, INPUT);
+  pinMode(limit_switch_pin_y, INPUT);
   digitalWrite(enable_pin_x_1, HIGH);
   digitalWrite(enable_pin_x_2, HIGH);
   digitalWrite(enable_pin_y, HIGH);
