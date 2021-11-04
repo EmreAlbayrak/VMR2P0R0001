@@ -7,8 +7,8 @@
 
 uint16_t thread_distance_x = 10; // In units of millimeter
 uint16_t thread_distance_y = 10; // In units of millimeter
-float_t pulley_diameter_x = 38.2; //In units of millimeter
-float_t pulley_diameter_y = 38.2; //In units of millimeter
+float_t pulley_diameter_x = 37.5; //In units of millimeter
+float_t pulley_diameter_y = 37.5; //In units of millimeter
 uint16_t motor_fullcycle_step_x = 400; // Motor's full cycle number of steps
 uint16_t motor_fullcycle_step_y = 400; // Motor's full cycle number of steps
 uint8_t microstep_coeff_x = 1; // Motor driver's microstep setting
