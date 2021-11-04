@@ -90,7 +90,7 @@ In the current version, system goes to home position if it receives "D" command 
 
 ####*Example:* 
 
-**GNNNNNNNNNNN**
+**DNNNNNNNNNNN**
 
 ### 4. Feedback Packages
 
@@ -163,7 +163,8 @@ Every feedback package starts with ">" character as an indicator. Computer softw
 	| >FS0027 | driving_mechanism_x set done. |
 	| >FS0028 | driving_mechanism_y set done. |
 	| | |
-	| >FP0001 | Move Package Confirmed |
+	| >FP0001 | Move Command Confirmed |
+	| >FP0002 | Move Home Command Confirmed |
 	| | |
 	| >FA0001 | Action Accomplished |
 
