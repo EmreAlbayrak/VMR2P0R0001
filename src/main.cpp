@@ -5,7 +5,6 @@
 
 // User defined includes
 #include <parameters.h>
-#include <math.h>
 
 const char compile_date[] = __DATE__ " " __TIME__; 
 
@@ -67,6 +66,12 @@ void system_monitor_parameters(){
 
   Serial.print("Pulley Diameter y-axis (mm): ");
   Serial.println(pulley_diameter_y);
+
+  Serial.print("System Cycle Linear Distance x (mm): ");
+  Serial.println(system_cycle_linear_distance_x);
+
+  Serial.print("System Cycle Linear Distance y (mm): ");
+  Serial.println(system_cycle_linear_distance_y);
 
   Serial.print("Motor Full Cycle x-axis (# of steps): ");
   Serial.println(motor_fullcycle_step_x);
@@ -203,7 +208,7 @@ uint16_t degree_to_step_converter(float_t degree, float_t motor_full_cycle_step,
   return round(degree * motor_full_cycle_step * micrestep_coeff / 360);
 }
 
-float_t linear_to_rotational_converter(float_t distance, float_t system_cycle_linear_distance){
+float_t linear_to_rotational_converter(float_t distance, float_t system_cycle_linear_distance){ //Returns Degrees
   return ((distance / system_cycle_linear_distance) * 360);
 }
 
@@ -262,6 +267,24 @@ void move_motors(String package_income){
   set_direction_y(package_income[7]);
 //--------------------------------------------------------------------- Calculates required # steps for action according to move type
   move_type_selector_step_calculator(package_income);
+//--------------------------------------------------------------------- System Info, Delete after test 05.11.2021
+  Serial.print("System Info: system_cycle_linear_distance_x (mm): ");
+  Serial.println(system_cycle_linear_distance_x);
+
+  Serial.print("System Info: system_cycle_linear_distance_y (mm): ");
+  Serial.println(system_cycle_linear_distance_y);
+
+  Serial.print("System Info: degree_x (deg): ");
+  Serial.println(degree_x);
+
+  Serial.print("System Info: degree_y (deg): ");
+  Serial.println(degree_y);
+
+  Serial.print("System Info: step_x (step): ");
+  Serial.println(step_x);
+
+  Serial.print("System Info: degree_x (step): ");
+  Serial.println(step_y);
 //--------------------------------------------------------------------- Magic. Ask Emre Albayrak for more info.
   if(step_x / 2 > step_count_acceleration_calculated_x){
     step_count_acceleration_x = step_count_acceleration_calculated_x;
@@ -302,11 +325,6 @@ void move_motors(String package_income){
     else if(step_counter_x > step_x - step_count_acceleration_x){
       step_delay_instantaneous_x = map(step_counter_x, step_x - step_count_acceleration_calculated_x, step_x, step_delay_speed_steady_x, step_delay_speed_min_x);
     }
-
-    /*
-    Serial.print("System Info: Step Number: ");
-    Serial.println(step_counter_x);
-    */
   }
 
   digitalWrite(enable_pin_x_1, HIGH); //Let the motor x_1 power off
@@ -337,10 +355,7 @@ void move_motors(String package_income){
   Serial.println(">FA0001"); 
 }
 
-void destination_home_x_axis(){ // TODO: Add home point allignment x-axis
-  //Add direction of rotation
-  //Add for loop for counting unlimited
-  //Break the code when limit swtich signal rised "HIGH"
+void destination_home_x_axis(){ 
   Serial.println(">FP0002");
   bool limit_switch_flag_x = true;
   bool toggle = true;
@@ -365,16 +380,16 @@ void destination_home_x_axis(){ // TODO: Add home point allignment x-axis
     // Serial.println("*");
     digitalWrite(pulse_pin_x_1,HIGH);
     digitalWrite(pulse_pin_x_2, HIGH);
-    delayMicroseconds(step_delay_speed_steady_x);
+    delayMicroseconds(step_delay_speed_home_x);
     digitalWrite(pulse_pin_x_1, LOW);
     digitalWrite(pulse_pin_x_2, LOW);
-    delayMicroseconds(step_delay_speed_steady_x);
+    delayMicroseconds(step_delay_speed_home_x);
   }
   digitalWrite(enable_pin_x_1, HIGH);
   digitalWrite(enable_pin_x_2, HIGH);
 }
 
-void destination_home_y_axis(){ //TODO: Add home point allignmetn y-axis
+void destination_home_y_axis(){ 
   Serial.println(">FP0002");
   bool limit_switch_flag_y;
   bool toggle = true;
@@ -395,9 +410,9 @@ void destination_home_y_axis(){ //TODO: Add home point allignmetn y-axis
       toggle = true;
     }
     digitalWrite(pulse_pin_y,HIGH);
-    delayMicroseconds(step_delay_speed_steady_y);
+    delayMicroseconds(step_delay_speed_home_y);
     digitalWrite(pulse_pin_y, LOW);
-    delayMicroseconds(step_delay_speed_steady_y); 
+    delayMicroseconds(step_delay_speed_home_y); 
   }
 }
 
