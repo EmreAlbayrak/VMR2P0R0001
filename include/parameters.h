@@ -25,6 +25,8 @@ uint32_t step_delay_acceleration_avg_x = 0; // In units of microsecond
 uint32_t step_delay_acceleration_avg_y = 0; // In units of microsecond
 uint32_t step_count_acceleration_x = 0; // Number of steps that acceleration going to applied on x-axis
 uint32_t step_count_acceleration_y = 0; // Number of steps that acceleration going to applied on y-axis
+uint32_t step_delay_speed_home_x = 1400; 
+uint32_t step_delay_speed_home_y = 1400;
 uint16_t input_speed_steady_x = 0; // In units of mm/s
 uint16_t input_speed_steady_y = 0; // In units of mm/s
 uint8_t input_acceleration_x = 0; // In units of mm/(s^2)
@@ -36,7 +38,7 @@ uint32_t step_count_acceleration_calculated_x = 0; //Memory for step_count_accel
 uint32_t step_count_acceleration_calculated_y = 0; //Memory for step_count_acceleration_y calculation
 float_t system_cycle_linear_distance_x = 0; // The varible keeps linear distance of one cycle for x-axis
 float_t system_cycle_linear_distance_y = 0; // The varible keeps linear distance of one cycle for y-axis
-uint32_t pi = 3.141592; //mutliplied by 10^6 for unit conversion
+float_t pi = 3.141592; //pi number
 float_t degree_x;
 float_t degree_y;
 uint32_t step_x;
