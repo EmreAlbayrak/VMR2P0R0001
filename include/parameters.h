@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-//--------------------------------------------------------------------- Motor Control Parameters
+//--------------------------------------------------------------------- Motor Control Parameters (updated)
 
 uint16_t thread_distance_x = 10; // In units of millimeter
 uint16_t thread_distance_y = 10; // In units of millimeter
