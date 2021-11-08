@@ -355,7 +355,8 @@ void move_motors(String package_income){
   Serial.println(">FA0001"); 
 }
 
-void destination_home_x_axis(){ 
+void destination_home_x_axis(){
+  step_delay_speed_home_x = 1400 / microstep_coeff_x; 
   Serial.println(">FP0002");
   bool limit_switch_flag_x = true;
   bool toggle = true;
