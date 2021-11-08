@@ -205,7 +205,7 @@ void speed_acceleration_calculator_pulley(){
 }
 
 uint16_t degree_to_step_converter(float_t degree, float_t motor_full_cycle_step, float_t micrestep_coeff){
-  return round(degree * motor_full_cycle_step * micrestep_coeff / 360);
+  return round((degree * motor_full_cycle_step * micrestep_coeff) / 360);
 }
 
 float_t linear_to_rotational_converter(float_t distance, float_t system_cycle_linear_distance){ //Returns Degrees
@@ -380,10 +380,10 @@ void destination_home_x_axis(){
     // Serial.println("*");
     digitalWrite(pulse_pin_x_1,HIGH);
     digitalWrite(pulse_pin_x_2, HIGH);
-    delayMicroseconds(step_delay_speed_home_x);
+    delayMicroseconds(step_delay_speed_home_x/microstep_coeff_x);
     digitalWrite(pulse_pin_x_1, LOW);
     digitalWrite(pulse_pin_x_2, LOW);
-    delayMicroseconds(step_delay_speed_home_x);
+    delayMicroseconds(step_delay_speed_home_x/microstep_coeff_x);
   }
   digitalWrite(enable_pin_x_1, HIGH);
   digitalWrite(enable_pin_x_2, HIGH);
