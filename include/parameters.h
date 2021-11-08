@@ -4,7 +4,7 @@
 #include <Arduino.h>
 
 //--------------------------------------------------------------------- Motor Control Parameters (updated)
-
+// v2
 uint16_t thread_distance_x = 10; // In units of millimeter
 uint16_t thread_distance_y = 10; // In units of millimeter
 float_t pulley_diameter_x = 37.5; //In units of millimeter
