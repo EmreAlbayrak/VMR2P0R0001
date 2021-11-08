@@ -550,7 +550,7 @@ void set_parameters(String package_income){
       Serial.println(">FS0026");
       break;
     case 27:
-      driving_mechanism == package_income[8];
+      driving_mechanism = package_income[8];
       EEPROM.put(address_driving_mechanism, driving_mechanism);
       Serial.println(">FS0027");
       break;
