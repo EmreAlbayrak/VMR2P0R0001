@@ -26,8 +26,8 @@ void get_parameters_eeprom(){
   EEPROM.get(address_input_acceleration_x, input_acceleration_x);
   EEPROM.get(address_input_acceleration_y, input_acceleration_y);
   EEPROM.get(address_driving_mechanism, driving_mechanism);
-  EEPROM.get(address_step_delay_speed_min_x, step_delay_speed_min_x);
-  EEPROM.get(address_step_delay_speed_min_y, step_delay_speed_min_y);
+  EEPROM.get(address_input_step_delay_speed_min_x, step_delay_speed_min_x);
+  EEPROM.get(address_input_step_delay_speed_min_y, step_delay_speed_min_y);
 }
 
 void system_monitor_parameters(){
@@ -171,6 +171,9 @@ float_t parse_distance(String package_income,char axis){
 }
 
 void speed_acceleration_calculator_leadscrew(){
+  step_delay_speed_min_x = input_step_delay_speed_min_x / microstep_coeff_x;
+  step_delay_speed_min_y = input_step_delay_speed_min_y / microstep_coeff_y;
+
   step_delay_speed_steady_x = thread_distance_x*pow(10, 6) / (input_speed_steady_x*motor_fullcycle_step_x*microstep_coeff_x*2);
   step_delay_speed_steady_y = thread_distance_y*pow(10, 6) / (input_speed_steady_y*motor_fullcycle_step_y*microstep_coeff_y*2);
   delta_t_x = input_speed_steady_x / input_acceleration_x; // Delta time that acceleration going to be applied on x-axis
@@ -182,6 +185,9 @@ void speed_acceleration_calculator_leadscrew(){
 }
 
 void speed_acceleration_calculator_pulley(){
+  step_delay_speed_min_x = input_step_delay_speed_min_x / microstep_coeff_x;
+  step_delay_speed_min_y = input_step_delay_speed_min_y / microstep_coeff_y;
+
   step_delay_speed_steady_x = round((pi*pulley_diameter_x*pow(10, 6)) / (input_speed_steady_x * motor_fullcycle_step_x * microstep_coeff_x * 2));
   step_delay_speed_steady_y = round((pi*pulley_diameter_y*pow(10, 6)) / (input_speed_steady_y * motor_fullcycle_step_y * microstep_coeff_y * 2));
 
@@ -320,10 +326,10 @@ void move_motors(String package_income){
     delayMicroseconds(step_delay_instantaneous_x);
 //---------------------------------------------------------------------- Applying acceleration for x-axis
     if(step_counter_x < step_count_acceleration_x){
-      step_delay_instantaneous_x = map(step_counter_x, 0, step_count_acceleration_calculated_x, step_delay_speed_min_x, step_delay_speed_steady_x);
+      step_delay_instantaneous_x = map(step_counter_x, 0, step_count_acceleration_calculated_x, (step_delay_speed_min_x / microstep_coeff_x), step_delay_speed_steady_x);
     }
     else if(step_counter_x > step_x - step_count_acceleration_x){
-      step_delay_instantaneous_x = map(step_counter_x, step_x - step_count_acceleration_calculated_x, step_x, step_delay_speed_steady_x, step_delay_speed_min_x);
+      step_delay_instantaneous_x = map(step_counter_x, step_x - step_count_acceleration_calculated_x, step_x, step_delay_speed_steady_x, (step_delay_speed_min_x / microstep_coeff_x));
     }
   }
 
@@ -342,10 +348,10 @@ void move_motors(String package_income){
     delayMicroseconds(step_delay_instantaneous_y);
 //---------------------------------------------------------------------- Applying acceleration for y-axis
     if(step_counter_y < step_count_acceleration_y){
-      step_delay_instantaneous_y = map(step_counter_y, 0, step_count_acceleration_calculated_y, step_delay_speed_min_y, step_delay_speed_steady_y);
+      step_delay_instantaneous_y = map(step_counter_y, 0, step_count_acceleration_calculated_y, step_delay_speed_min_y / microstep_coeff_y, step_delay_speed_steady_y);
     }
     else if(step_counter_y > step_y - step_count_acceleration_y){
-      step_delay_instantaneous_y = map(step_counter_y, step_y - step_count_acceleration_calculated_y, step_y, step_delay_speed_steady_y, step_delay_speed_min_y);
+      step_delay_instantaneous_y = map(step_counter_y, step_y - step_count_acceleration_calculated_y, step_y, step_delay_speed_steady_y, step_delay_speed_min_y / microstep_coeff_y);
     }
   }
 
@@ -396,6 +402,7 @@ void destination_home_y_axis(){
   bool toggle = true;
   unsigned long time_1 = 0;
   set_direction_y('N');
+  step_delay_speed_home_y = 1400 / microstep_coeff_y;
   while(limit_switch_flag_y = false){
     if(digitalRead(limit_switch_pin_y) == HIGH){ //Switch debounce for spikes
       if(toggle == true){
@@ -489,13 +496,13 @@ void set_parameters(String package_income){
       Serial.println(">FS0012");
       break;
     case 13:
-      step_delay_speed_min_x = parameter_value_set_int;
-      EEPROM.put(address_step_delay_speed_min_x, step_delay_speed_min_x);
+      input_step_delay_speed_min_x = parameter_value_set_int;
+      EEPROM.put(address_input_step_delay_speed_min_x, input_step_delay_speed_min_x);
       Serial.println(">FS0013");
       break;
     case 14:
-      step_delay_speed_min_y = parameter_value_set_int;
-      EEPROM.put(address_step_delay_speed_min_y, step_delay_speed_min_y);
+      input_step_delay_speed_min_y = parameter_value_set_int;
+      EEPROM.put(address_input_step_delay_speed_min_y, input_step_delay_speed_min_y);
       Serial.println(">FS0014");
       break;
     case 15:

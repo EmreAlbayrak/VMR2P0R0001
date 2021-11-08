@@ -11,14 +11,16 @@ float_t pulley_diameter_x = 37.5; //In units of millimeter
 float_t pulley_diameter_y = 37.5; //In units of millimeter
 uint16_t motor_fullcycle_step_x = 400; // Motor's full cycle number of steps
 uint16_t motor_fullcycle_step_y = 400; // Motor's full cycle number of steps
-uint8_t microstep_coeff_x = 1; // Motor driver's microstep setting
-uint8_t microstep_coeff_y = 1; // Motor driver's microstep setting
+uint8_t microstep_coeff_x = 2; // Motor driver's microstep setting
+uint8_t microstep_coeff_y = 2; // Motor driver's microstep setting
 uint16_t max_speed_x = 150; // In units of mm/s
 uint16_t max_speed_y = 150; // In Units of mm/s
 uint32_t step_delay_speed_steady_x = 0; // In units of microsecond
 uint32_t step_delay_speed_steady_y = 0; // In units of microsecond
-uint32_t step_delay_speed_min_x = 8000; // In units of microsecond
-uint32_t step_delay_speed_min_y = 8000; // In units of microsecond
+uint32_t input_step_delay_speed_min_x = 8000; // In units of microsecond
+uint32_t input_step_delay_speed_min_y = 8000; // In units of microsecond
+uint32_t step_delay_speed_min_x;
+uint32_t step_delay_speed_min_y;
 uint32_t step_delay_instantaneous_x = 0; // In units of microsecond
 uint32_t step_delay_instantaneous_y = 0; // In units of microsecond
 uint32_t step_delay_acceleration_avg_x = 0; // In units of microsecond
@@ -76,7 +78,7 @@ uint8_t address_input_speed_steady_y = 20;
 uint8_t address_input_acceleration_x = 22;
 uint8_t address_input_acceleration_y = 23;
 uint8_t address_driving_mechanism = 24;
-uint8_t address_step_delay_speed_min_x = 26;
-uint8_t address_step_delay_speed_min_y = 30;
+uint8_t address_input_step_delay_speed_min_x = 26;
+uint8_t address_input_step_delay_speed_min_y = 30;
 
 #endif PARAMETERS_H
