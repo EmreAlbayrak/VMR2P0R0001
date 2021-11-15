@@ -4,7 +4,7 @@
 #include <Arduino.h>
 
 //--------------------------------------------------------------------- Motor Control Parameters (updated)
-// v2
+
 uint16_t thread_distance_x = 10; // In units of millimeter
 uint16_t thread_distance_y = 10; // In units of millimeter
 float_t pulley_diameter_x = 37.5; //In units of millimeter
@@ -44,6 +44,13 @@ float_t degree_y;
 uint32_t step_x;
 uint32_t step_y;
 
+//--------------------------------------------------------------------- Ethernet Parameters
+
+int localPort = 1883;    // 10002;  // local port to listen on
+char packetBuffer[255];   // buffer to hold incoming packet
+char ReplyBuffer[20];   // a string to send back
+
+
 //--------------------------------------------------------------------- Motor Pin Parameters
 
 const uint8_t direction_pin_x_1 = 2;
@@ -79,4 +86,4 @@ uint8_t address_driving_mechanism = 24;
 uint8_t address_step_delay_speed_min_x = 26;
 uint8_t address_step_delay_speed_min_y = 30;
 
-#endif PARAMETERS_H
+#endif //PARAMETERS_H

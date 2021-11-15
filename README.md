@@ -1,4 +1,4 @@
-# **Visiomex VMR2P0R0001 Documentation**
+# **Visiomex VMR2P0R0001 v2 Documentation**
 
 *Visiomex Industrial Image Processing Solutions Inc. 2021*
 
@@ -6,12 +6,20 @@
 
 ## Protocol Information
 
-The system communicates over UART protocol, 9600 baud rate, 8-bit, no handshake.
+### 1. UART Communication 
 
-The current verion tested on ST Nucleo STM32F303RE Board With on-board ST-Link V2 UART Converter.
+The system has an option to communicate over UART protocol, 115200 baud rate, 8-bit, no handshake.
+
+The current verion tested on ST Nucleo STM32F207ZG Board With on-board ST-Link V2 UART Converter.
 Driver requred to communicate over on-board ST-Link V2 UART converter.
 
 Driver could be found at: *https://www.st.com/en/development-tools/stsw-link009.html*
+
+### 2. Ethernet Socket Communication
+
+The system has another option to communicate over Ethernet UDP messaging on port 1883. The pre-defined IP address of the system is "192.168.0.2" where it can be set in the file "defines.h", line 179.
+
+## Command / Feedback Structures
 
 ### 1. Set Commands:
 
